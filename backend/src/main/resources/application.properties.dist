@@ -1,0 +1,8 @@
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+server.port=8080
+
+api.cors.allowed-origins=http://localhost:8080,http://localhost:5173
