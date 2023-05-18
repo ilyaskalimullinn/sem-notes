@@ -3,6 +3,9 @@ spring.datasource.url=
 spring.datasource.username=
 spring.datasource.password=
 
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
 server.port=8080
 
 api.cors.allowed-origins=http://localhost:8080,http://localhost:5173
