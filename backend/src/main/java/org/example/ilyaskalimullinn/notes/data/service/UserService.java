@@ -4,8 +4,8 @@ import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.repository.UserRepository;
 import org.example.ilyaskalimullinn.notes.data.request.LoginRequest;
 import org.example.ilyaskalimullinn.notes.data.request.RegistrationRequest;
-import org.example.ilyaskalimullinn.notes.data.response.LoginResponse;
-import org.example.ilyaskalimullinn.notes.data.response.RegistrationResponse;
+import org.example.ilyaskalimullinn.notes.data.response.AuthenticationResponse;
+import org.example.ilyaskalimullinn.notes.data.serializer.UserDetailsSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +25,7 @@ public class UserService {
     private  JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
-    public RegistrationResponse register(RegistrationRequest request) {
+    public AuthenticationResponse register(RegistrationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new DuplicateKeyException("User with this username already exists");
         }
@@ -35,12 +35,13 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
         user = userRepository.save(user);
-        return RegistrationResponse.builder()
+        return AuthenticationResponse.builder()
                 .token(jwtService.generateToken(user))
+                .user(new UserDetailsSerializer(user))
                 .build();
     }
 
-    public LoginResponse login(LoginRequest request) {
+    public AuthenticationResponse login(LoginRequest request) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
                 request.getPassword()
@@ -52,8 +53,9 @@ public class UserService {
         }
         User user = userRepository.findByUsername(request.getUsername());
         String token = jwtService.generateToken(user);
-        return LoginResponse.builder()
+        return AuthenticationResponse.builder()
                 .token(token)
+                .user(new UserDetailsSerializer(user))
                 .build();
     }
 }
