@@ -9,6 +9,11 @@
            :placeholder="placeholder"
            :required="required"
     />
+    <div class="form-errors">
+      <div v-for="error in errors" :key="error" class="form-error">
+        {{ error.$message }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -44,11 +49,17 @@ export default {
     modelValue: {
       type: String,
       default: "modelValue"
+    },
+    errors: {
+      type: Array,
+      default: []
     }
   }
 }
 </script>
 
 <style scoped>
-
+.form-error {
+    color: red;
+}
 </style>
