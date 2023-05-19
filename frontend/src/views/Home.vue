@@ -1,14 +1,19 @@
 <template>
   <BaseContainer>
-    <h1>Welcome to Notes</h1>
-    <h2 v-if="user">{{user.fullName}}</h2>
-    <br />
-    <ul>
+    <h1>Welcome to Notes
+    <span v-if="user">, {{user.fullName}}</span>
+    </h1>
+    <ul v-if="!user">
       <li>
         <router-link :to="{name: 'Login'}">Login</router-link>
       </li>
       <li>
         <router-link :to="{name: 'Register'}">Register</router-link>
+      </li>
+    </ul>
+    <ul v-else>
+      <li>
+        <router-link :to="{name: 'Logout'}">Logout</router-link>
       </li>
     </ul>
   </BaseContainer>
