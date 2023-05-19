@@ -5,6 +5,23 @@ export const useUserStore = defineStore('userStore', {
     token: undefined,
     user: undefined,
     loading: false,
-    errors: []
-  })
+    error: null
+  }),
+  actions: {
+    storeUser(user) {
+      this.user = user;
+    },
+    storeToken(token) {
+      this.token = token;
+    },
+    setLoading(loading) {
+      this.loading = loading;
+    },
+    storeError(error) {
+      this.error = error
+    },
+    clearError() {
+      this.error = null
+    }
+  }
 })

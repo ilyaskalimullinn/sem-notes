@@ -1,5 +1,5 @@
 <template>
-  <BaseAuthForm @submit="this.register" :title="title">
+  <BaseAuthForm @submit.prevent="this.register" :title="title" :error="this.errorMessage">
     <template v-slot:fields>
       <FormField name="email"
                  v-model="this.form.email"
@@ -44,14 +44,19 @@ import BaseAuthForm from "./BaseAuthForm.vue";
 import FormField from "./FormField.vue";
 import {register} from "../../services/api.js";
 import useVuelidate from "@vuelidate/core";
-import {email, helpers, maxLength, minLength, required, sameAs} from "@vuelidate/validators";
+import {email, helpers, maxLength, minLength, required} from "@vuelidate/validators";
+import {storeToRefs} from "pinia";
+import {useUserStore} from "../../stores/userStore.js";
 
 export default {
   name: "RegistrationForm",
   components: {FormField, BaseAuthForm},
   setup() {
+    const userStore = useUserStore();
+    const {error} = storeToRefs(userStore);
     return {
-      v$: useVuelidate()
+      v$: useVuelidate(),
+      error
     }
   },
   data() {
@@ -62,7 +67,27 @@ export default {
         fullName: "",
         password: "",
         passwordRepeat: ""
+      },
+      errorMessagesMap: {
+        409: "This email address is already taken",
+        400: "Invalid request",
+        500: "Error on the server"
+      },
+      errorMessage: null
+    }
+  },
+  watch: {
+    error(newValue, oldValue) {
+      console.log(newValue);
+      if (newValue == null) {
+        this.errorMessage = null;
+        return;
       }
+      if (!newValue.response || !newValue.response.status) {
+        this.errorMessage = "Unknown error";
+        return;
+      }
+      this.errorMessage = this.errorMessagesMap[newValue.response.status] || "Unknown error";
     }
   },
   validations() {
@@ -90,12 +115,16 @@ export default {
 
   },
   methods: {
-    register() {
+    async register() {
+      const userStore = useUserStore();
       this.v$.form.$touch();
       if (this.v$.form.$error) {
         return;
       }
-      register(this.form.email, this.form.fullName, this.form.password, this.form.passwordRepeat);
+      await register(this.form.email, this.form.fullName, this.form.password, this.form.passwordRepeat);
+      if (!userStore.error) {
+        this.$router.push({name: "Home"});
+      }
     }
   }
 }

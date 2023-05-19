@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="this.$emit('submit')" method="post">
+  <form @submit.prevent="this.$emit('submit.prevent')" method="post">
     <div class="form-title">{{title}}</div>
     <div class="fields-row">
       <slot name="fields">
@@ -17,30 +17,24 @@
       </slot>
     </div>
 
-    <div class="errors" v-if="this.errors">
-      <AuthFormError v-for="error in this.errors"
-        :text="error"
-      />
+    <div class="error" v-if="this.error">
+      {{ this.error }}
     </div>
 
   </form>
 </template>
 
 <script>
-import {mapState} from "pinia";
-import {useUserStore} from "../../stores/userStore.js";
-import AuthFormError from "./AuthFormError.vue";
 
 export default {
   name: "BaseAuthForm",
-  components: {AuthFormError},
-  props: ["title"],
-  computed: {
-    ...mapState(useUserStore, ['errors'])
-  }
+  props: ["title", "error"]
 }
 </script>
 
 <style scoped>
-
+.error {
+    color: red;
+    font-weight: bold;
+}
 </style>

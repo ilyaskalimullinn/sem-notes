@@ -1,5 +1,5 @@
 <template>
-  <BaseAuthForm @submit="this.login" :title="title">
+  <BaseAuthForm @submit.prevent="this.login" :title="title">
     <template v-slot:fields>
       <FormField name="email" v-model="this.form.email" :errors="v$.form.email.$errors" label="Email" type="email" required/>
       <FormField name="password" v-model="this.form.password" :errors="v$.form.password.$errors" label="Password" type="password" required/>
