@@ -1,10 +1,32 @@
 <template>
   <BaseAuthForm @submit="this.register" :title="title">
     <template v-slot:fields>
-      <FormField name="email" v-model="this.email" label="Email" type="email" required />
-      <FormField name="fullName" v-model="this.fullName" label="Name" required/>
-      <FormField name="password" v-model="this.password" label="Password" type="password" required/>
-      <FormField name="passwordRepeat" v-model="this.passwordRepeat" label="Password again" type="password" required/>
+      <FormField name="email"
+                 v-model="this.form.email"
+                 :errors="v$.form.email.$errors"
+                 label="Email"
+                 type="email"
+                 required/>
+
+      <FormField name="fullName"
+                 v-model="this.form.fullName"
+                 :errors="v$.form.fullName.$errors"
+                 label="Name"
+                 required/>
+
+      <FormField name="password"
+                 v-model="this.form.password"
+                 :errors="v$.form.password.$errors"
+                 label="Password"
+                 type="password"
+                 required/>
+
+      <FormField name="passwordRepeat"
+                 v-model="this.form.passwordRepeat"
+                 :errors="v$.form.passwordRepeat.$errors"
+                 label="Password again"
+                 type="password"
+                 required/>
     </template>
     <template v-slot:submit-button>
       <input type="submit" value="Sign in"/>
@@ -21,22 +43,59 @@
 import BaseAuthForm from "./BaseAuthForm.vue";
 import FormField from "./FormField.vue";
 import {register} from "../../services/api.js";
+import useVuelidate from "@vuelidate/core";
+import {email, helpers, maxLength, minLength, required, sameAs} from "@vuelidate/validators";
 
 export default {
   name: "RegistrationForm",
   components: {FormField, BaseAuthForm},
+  setup() {
+    return {
+      v$: useVuelidate()
+    }
+  },
   data() {
     return {
       title: "Register",
-      email: "",
-      fullName: "",
-      password: "",
-      passwordRepeat: ""
+      form: {
+        email: "",
+        fullName: "",
+        password: "",
+        passwordRepeat: ""
+      }
     }
+  },
+  validations() {
+    return {
+      form: {
+        email: {
+          required: helpers.withMessage("This field is required", required),
+          email: helpers.withMessage("Not a valid email", email),
+        },
+        password: {
+          required: helpers.withMessage("This field is required", required),
+          minLength: helpers.withMessage("Min length is 5 characters", minLength(5)),
+          maxLength: helpers.withMessage("Max length is 255 characters", maxLength(255))
+        },
+        fullName: {
+          required: helpers.withMessage("This field is required", required),
+          minLength: helpers.withMessage("Min length is 5 characters", minLength(1)),
+          maxLength: helpers.withMessage("Max length is 255 characters", maxLength(255)),
+        },
+        passwordRepeat: {
+          sameAsPassword: helpers.withMessage("Must be the same as password", (v) => v === this.form.password)
+        }
+      }
+    }
+
   },
   methods: {
     register() {
-      register(this.email, this.fullName, this.password, this.passwordRepeat);
+      this.v$.form.$touch();
+      if (this.v$.form.$error) {
+        return;
+      }
+      register(this.form.email, this.form.fullName, this.form.password, this.form.passwordRepeat);
     }
   }
 }
