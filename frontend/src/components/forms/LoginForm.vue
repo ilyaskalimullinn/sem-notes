@@ -1,5 +1,5 @@
 <template>
-  <BaseAuthForm @submit.prevent="this.login" :title="title">
+  <BaseAuthForm @submit.prevent="this.login" :title="title" :error="this.errorMessage">
     <template v-slot:fields>
       <FormField name="email" v-model="this.form.email" :errors="v$.form.email.$errors" label="Email" type="email" required/>
       <FormField name="password" v-model="this.form.password" :errors="v$.form.password.$errors" label="Password" type="password" required/>
@@ -21,11 +21,14 @@ import FormField from "./FormField.vue";
 import {login} from "../../services/api.js";
 import useVuelidate from "@vuelidate/core";
 import {email, maxLength, minLength, required, helpers} from "@vuelidate/validators";
+import AuthenticationExceptionsMixin from "../../mixins/AuthenticationExceptionsMixin.js";
+import {useUserStore} from "../../stores/userStore.js";
 
 
 export default {
   name: "LoginForm",
   components: {FormField, BaseAuthForm},
+  mixins: [AuthenticationExceptionsMixin],
   setup () {
     return {
       v$: useVuelidate()
@@ -37,6 +40,11 @@ export default {
       form: {
         email: "",
         password: ""
+      },
+      errorMessagesMap: {
+        401: "Wrong email or password",
+        400: "Invalid request",
+        500: "Error on the server"
       }
     }
   },
@@ -55,13 +63,14 @@ export default {
   },
   methods: {
     async login() {
+      const userStore = useUserStore();
       this.v$.form.$touch();
       console.log(this.v$.form)
       if (this.v$.form.$error) {
         return;
       }
-      const res = await login(this.form.email, this.form.password);
-      if (res) {
+      await login(this.form.email, this.form.password);
+      if (!userStore.error) {
         this.$router.push({name: 'Home'});
       }
     }

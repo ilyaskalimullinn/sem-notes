@@ -45,18 +45,16 @@ import FormField from "./FormField.vue";
 import {register} from "../../services/api.js";
 import useVuelidate from "@vuelidate/core";
 import {email, helpers, maxLength, minLength, required} from "@vuelidate/validators";
-import {storeToRefs} from "pinia";
 import {useUserStore} from "../../stores/userStore.js";
+import AuthenticationExceptionsMixin from "../../mixins/AuthenticationExceptionsMixin.js";
 
 export default {
   name: "RegistrationForm",
+  mixins: [AuthenticationExceptionsMixin],
   components: {FormField, BaseAuthForm},
   setup() {
-    const userStore = useUserStore();
-    const {error} = storeToRefs(userStore);
     return {
       v$: useVuelidate(),
-      error
     }
   },
   data() {
@@ -73,21 +71,6 @@ export default {
         400: "Invalid request",
         500: "Error on the server"
       },
-      errorMessage: null
-    }
-  },
-  watch: {
-    error(newValue, oldValue) {
-      console.log(newValue);
-      if (newValue == null) {
-        this.errorMessage = null;
-        return;
-      }
-      if (!newValue.response || !newValue.response.status) {
-        this.errorMessage = "Unknown error";
-        return;
-      }
-      this.errorMessage = this.errorMessagesMap[newValue.response.status] || "Unknown error";
     }
   },
   validations() {
@@ -112,7 +95,6 @@ export default {
         }
       }
     }
-
   },
   methods: {
     async register() {
@@ -125,6 +107,7 @@ export default {
       if (!userStore.error) {
         this.$router.push({name: "Home"});
       }
+      console.log(this.errorMessage)
     }
   }
 }
