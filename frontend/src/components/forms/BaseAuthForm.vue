@@ -17,13 +17,27 @@
       </slot>
     </div>
 
+    <div class="errors" v-if="this.errors">
+      <AuthFormError v-for="error in this.errors"
+        :text="error"
+      />
+    </div>
+
   </form>
 </template>
 
 <script>
+import {mapState} from "pinia";
+import {useUserStore} from "../../stores/userStore.js";
+import AuthFormError from "./AuthFormError.vue";
+
 export default {
   name: "BaseAuthForm",
-  props: ["title"]
+  components: {AuthFormError},
+  props: ["title"],
+  computed: {
+    ...mapState(useUserStore, ['errors'])
+  }
 }
 </script>
 

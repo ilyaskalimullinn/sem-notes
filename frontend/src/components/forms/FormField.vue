@@ -5,7 +5,7 @@
            :name="name"
            :type="type"
            :id="id"
-           :value="value"
+           :value="modelValue"
            :placeholder="placeholder"
            :required="required"
     />
@@ -40,10 +40,6 @@ export default {
     placeholder: {
       type: String,
       default: (props) => props.label
-    },
-    value: {
-      type: String,
-      default: ""
     },
     modelValue: {
       type: String,
