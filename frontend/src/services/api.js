@@ -49,3 +49,7 @@ function defaultApiExceptionHandler(error) {
     throw new Error("Unknown error, please try again");
   }
 }
+
+export async function apiSaveNote(note) {
+  //todo
+}
