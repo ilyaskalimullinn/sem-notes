@@ -67,7 +67,6 @@ export default {
         return;
       }
       await this.login(this.form.email, this.form.password);
-      console.log(this.error)
       if (!this.error) {
         this.$router.push({name: 'Home'});
       }

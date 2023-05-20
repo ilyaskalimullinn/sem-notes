@@ -9,3 +9,19 @@ export function getTokenFromStorage() {
 export function clearTokenInStorage() {
   localStorage.setItem("token", null);
 }
+
+export function storeUserInStorage(user) {
+  localStorage.setItem("user", JSON.stringify(user));
+}
+
+export function getUserFromStorage() {
+  try {
+    return JSON.parse(localStorage.getItem("user"));
+  } catch (error) {
+    return null;
+  }
+}
+
+export function clearUserInStorage() {
+  localStorage.setItem("user", null);
+}

@@ -1,11 +1,18 @@
 import {defineStore} from "pinia";
 import {apiLogin, apiRegister} from "../services/api.js";
-import {getTokenFromStorage, storeTokenInStorage} from "../services/localData.js";
+import {
+  clearTokenInStorage,
+  clearUserInStorage,
+  getTokenFromStorage,
+  getUserFromStorage,
+  storeTokenInStorage,
+  storeUserInStorage
+} from "../services/localData.js";
 
 export const useUserStore = defineStore('userStore', {
   state: () => ({
     token: getTokenFromStorage(),
-    user: undefined,
+    user: getUserFromStorage(),
     requestData: {
       loading: false,
       error: null
@@ -42,12 +49,23 @@ export const useUserStore = defineStore('userStore', {
     },
     setUser(user) {
       this.user = user;
+      storeUserInStorage(user);
     },
     setError(error) {
       this.requestData.error = error
     },
     clearError() {
       this.requestData.error = null
+    },
+    logout() {
+      clearUserInStorage();
+      clearTokenInStorage();
+      this.$reset();
+    }
+  },
+  getters: {
+    isAuthenticated(state) {
+      return state.user !== null;
     }
   }
 })

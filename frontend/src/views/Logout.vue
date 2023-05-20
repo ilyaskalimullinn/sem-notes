@@ -9,7 +9,7 @@ export default {
   name: "Logout",
   mounted() {
     const userStore = useUserStore();
-    userStore.$reset();
+    userStore.logout();
     this.$router.push({name: "Home"});
   }
 }
