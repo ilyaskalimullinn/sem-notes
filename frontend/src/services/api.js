@@ -21,41 +21,32 @@ instance.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 
-export async function login(email, password) {
-  const userStore = useUserStore();
-  userStore.setLoading(true);
-  await instance.post("/auth/login/", {
+export async function apiLogin(email, password) {
+  const response = await instance.post("/auth/login/", {
     username: email,
     password
-  }).then(response => {
+  }).catch(defaultApiExceptionHandler);
 
-    userStore.storeUser(response.data["user"]);
-    userStore.storeToken(response.data["token"]);
-    userStore.clearError();
-
-  }).catch((error) => {
-    userStore.storeError(error);
-  });
-
-  userStore.setLoading(false);
+  return response.data;
 }
 
-export async function register(email, fullName, password, passwordRepeat) {
-  const userStore = useUserStore();
-  userStore.setLoading(true);
-  await instance.post("/auth/register/", {
+export async function apiRegister(email, fullName, password, passwordRepeat) {
+  const response = await instance.post("/auth/register/", {
     fullName,
     username: email,
     password,
     passwordRepeat
-  }).then(response => {
-    userStore.storeUser(response.data["user"]);
-    userStore.storeToken(response.data["token"]);
-    userStore.clearError();
+  }).catch(defaultApiExceptionHandler);
 
-  }).catch((error) => {
-    userStore.storeError(error);
-  });
+  return response.data;
+}
 
-  userStore.setLoading(false);
+function defaultApiExceptionHandler(error) {
+  if (error.response) {
+    console.error(error.response);
+    throw new Error(error.response.data.detail || "Unknown error");
+  } else {
+    console.error('Unknown error: ', error.message);
+    throw new Error("Unknown error, please try again");
+  }
 }

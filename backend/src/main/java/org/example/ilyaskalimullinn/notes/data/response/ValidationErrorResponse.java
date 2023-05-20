@@ -8,5 +8,6 @@ import java.util.Map;
 @Data
 @Builder
 public class ValidationErrorResponse {
+    private String detail;
     private Map<String, String> errors;
 }

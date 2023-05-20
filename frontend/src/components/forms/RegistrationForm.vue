@@ -1,5 +1,5 @@
 <template>
-  <BaseAuthForm @submit.prevent="this.register" :title="title" :error="this.errorMessage">
+  <BaseAuthForm @submit.prevent="this.submit" :title="title" :error="this.error">
     <template v-slot:fields>
       <FormField name="email"
                  v-model="this.form.email"
@@ -42,15 +42,13 @@
 <script>
 import BaseAuthForm from "./BaseAuthForm.vue";
 import FormField from "./FormField.vue";
-import {register} from "../../services/api.js";
 import useVuelidate from "@vuelidate/core";
 import {email, helpers, maxLength, minLength, required} from "@vuelidate/validators";
 import {useUserStore} from "../../stores/userStore.js";
-import AuthenticationExceptionsMixin from "../../mixins/AuthenticationExceptionsMixin.js";
+import {mapActions, mapState} from "pinia";
 
 export default {
   name: "RegistrationForm",
-  mixins: [AuthenticationExceptionsMixin],
   components: {FormField, BaseAuthForm},
   setup() {
     return {
@@ -65,13 +63,13 @@ export default {
         fullName: "",
         password: "",
         passwordRepeat: ""
-      },
-      errorMessagesMap: {
-        409: "This email address is already taken",
-        400: "Invalid request",
-        500: "Error on the server"
-      },
+      }
     }
+  },
+  computed: {
+    ...mapState(useUserStore, {
+      error: (state) => state.requestData.error
+    })
   },
   validations() {
     return {
@@ -97,17 +95,19 @@ export default {
     }
   },
   methods: {
-    async register() {
-      const userStore = useUserStore();
+    ...mapActions(useUserStore, ['register']),
+    async submit() {
       this.v$.form.$touch();
       if (this.v$.form.$error) {
         return;
       }
-      await register(this.form.email, this.form.fullName, this.form.password, this.form.passwordRepeat);
-      if (!userStore.error) {
-        this.$router.push({name: "Home"});
+      await this.register(this.form.email,
+                          this.form.fullName,
+                          this.form.password,
+                          this.form.passwordRepeat);
+      if (!this.error) {
+        this.$router.push({name: 'Home'});
       }
-      console.log(this.errorMessage)
     }
   }
 }

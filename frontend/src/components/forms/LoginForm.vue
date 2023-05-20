@@ -1,5 +1,5 @@
 <template>
-  <BaseAuthForm @submit.prevent="this.login" :title="title" :error="this.errorMessage">
+  <BaseAuthForm @submit.prevent="this.submit" :title="title" :error="this.error">
     <template v-slot:fields>
       <FormField name="email" v-model="this.form.email" :errors="v$.form.email.$errors" label="Email" type="email" required/>
       <FormField name="password" v-model="this.form.password" :errors="v$.form.password.$errors" label="Password" type="password" required/>
@@ -18,17 +18,15 @@
 <script>
 import BaseAuthForm from "./BaseAuthForm.vue";
 import FormField from "./FormField.vue";
-import {login} from "../../services/api.js";
 import useVuelidate from "@vuelidate/core";
 import {email, maxLength, minLength, required, helpers} from "@vuelidate/validators";
-import AuthenticationExceptionsMixin from "../../mixins/AuthenticationExceptionsMixin.js";
 import {useUserStore} from "../../stores/userStore.js";
+import {mapActions, mapState} from "pinia";
 
 
 export default {
   name: "LoginForm",
   components: {FormField, BaseAuthForm},
-  mixins: [AuthenticationExceptionsMixin],
   setup () {
     return {
       v$: useVuelidate()
@@ -40,13 +38,13 @@ export default {
       form: {
         email: "",
         password: ""
-      },
-      errorMessagesMap: {
-        401: "Wrong email or password",
-        400: "Invalid request",
-        500: "Error on the server"
       }
     }
+  },
+  computed: {
+    ...mapState(useUserStore, {
+      error: (state) => state.requestData.error
+    })
   },
   validations: {
     form: {
@@ -62,15 +60,15 @@ export default {
     }
   },
   methods: {
-    async login() {
-      const userStore = useUserStore();
+    ...mapActions(useUserStore, ['login']),
+    async submit() {
       this.v$.form.$touch();
-      console.log(this.v$.form)
       if (this.v$.form.$error) {
         return;
       }
-      await login(this.form.email, this.form.password);
-      if (!userStore.error) {
+      await this.login(this.form.email, this.form.password);
+      console.log(this.error)
+      if (!this.error) {
         this.$router.push({name: 'Home'});
       }
     }

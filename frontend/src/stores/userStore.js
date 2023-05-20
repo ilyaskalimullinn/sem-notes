@@ -1,27 +1,53 @@
 import {defineStore} from "pinia";
+import {apiLogin, apiRegister} from "../services/api.js";
+import {getTokenFromStorage, storeTokenInStorage} from "../services/localData.js";
 
 export const useUserStore = defineStore('userStore', {
   state: () => ({
-    token: undefined,
+    token: getTokenFromStorage(),
     user: undefined,
-    loading: false,
-    error: null
+    requestData: {
+      loading: false,
+      error: null
+    }
   }),
   actions: {
-    storeUser(user) {
+    async login(email, password) {
+      this.loading = true;
+      this.clearError();
+
+      try {
+        const data = await apiLogin(email, password);
+        storeTokenInStorage(data["token"]);
+        this.setUser(data["user"]);
+      } catch (error) {
+        this.setError(error.message);
+      }
+
+      this.loading = false;
+    },
+    async register(email, fullName, password, passwordRepeat) {
+      this.loading = true;
+      this.clearError();
+
+      try {
+        const data = await apiRegister(email, fullName, password, passwordRepeat);
+        storeTokenInStorage(data["token"]);
+        this.setUser(data["user"]);
+      } catch (error) {
+        this.setError(error.message);
+      }
+
+      this.loading = false;
+    },
+    setUser(user) {
       this.user = user;
     },
-    storeToken(token) {
-      this.token = token;
-    },
-    setLoading(loading) {
-      this.loading = loading;
-    },
-    storeError(error) {
-      this.error = error
+    setError(error) {
+      this.requestData.error = error
     },
     clearError() {
-      this.error = null
+      this.requestData.error = null
     }
   }
 })

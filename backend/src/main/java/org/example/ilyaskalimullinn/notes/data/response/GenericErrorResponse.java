@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 @Builder
 public class GenericErrorResponse {
-    private List<String> errors;
+    private String detail;
 }

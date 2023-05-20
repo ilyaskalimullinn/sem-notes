@@ -2,6 +2,7 @@ package org.example.ilyaskalimullinn.notes.controller;
 
 import org.example.ilyaskalimullinn.notes.data.response.GenericErrorResponse;
 import org.example.ilyaskalimullinn.notes.data.response.ValidationErrorResponse;
+import org.example.ilyaskalimullinn.notes.exception.FieldsValidationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,25 +20,24 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandlerController {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(FieldsValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrorResponse handleValidationException(MethodArgumentNotValidException e) {
-        Map<String, String> errors = new HashMap<>();
-        for (FieldError error : e.getFieldErrors()) {
-            errors.put(error.getField(), error.getDefaultMessage());
-        }
-        return ValidationErrorResponse.builder().errors(errors).build();
+    public ValidationErrorResponse handleValidationException(FieldsValidationException e) {
+        return ValidationErrorResponse.builder()
+                .detail(e.getMessage())
+                .errors(e.getErrors())
+                .build();
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public GenericErrorResponse handleDuplicateKeyException(DuplicateKeyException e) {
-        return GenericErrorResponse.builder().errors(List.of(e.getLocalizedMessage())).build();
+        return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public GenericErrorResponse handleBadCredentialsException(BadCredentialsException e) {
-        return GenericErrorResponse.builder().errors(List.of(e.getLocalizedMessage())).build();
+        return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
     }
 }
