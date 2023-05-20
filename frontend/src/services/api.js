@@ -6,10 +6,9 @@ const instance = axios.create({
   baseURL: API_URL
 })
 
-export async function testApi () {
-  const response = await instance.get('/test/')
-  return response.data
-}
+const noAuthInstance = axios.create({
+  baseURL: API_URL
+})
 
 instance.interceptors.request.use(function (config) {
   const userStore = useUserStore();
@@ -22,7 +21,7 @@ instance.interceptors.request.use(function (config) {
 });
 
 export async function apiLogin(email, password) {
-  const response = await instance.post("/auth/login/", {
+  const response = await noAuthInstance.post("/auth/login/", {
     username: email,
     password
   }).catch(defaultApiExceptionHandler);
@@ -31,7 +30,7 @@ export async function apiLogin(email, password) {
 }
 
 export async function apiRegister(email, fullName, password, passwordRepeat) {
-  const response = await instance.post("/auth/register/", {
+  const response = await noAuthInstance.post("/auth/register/", {
     fullName,
     username: email,
     password,
