@@ -1,10 +1,10 @@
 import {createRouter, createWebHistory} from "vue-router";
-import Login from "../views/Login.vue";
-import Home from "../views/Home.vue";
-import Register from "../views/Register.vue";
-import Logout from "../views/Logout.vue";
+import Login from "../views/LoginView.vue";
+import Home from "../views/HomeView.vue";
+import Register from "../views/RegisterView.vue";
+import Logout from "../views/LogoutView.vue";
 import {useUserStore} from "../stores/userStore.js";
-import NoteEditor from "../views/NoteEditor.vue";
+import NoteEditor from "../views/NoteEditorView.vue";
 
 const routes = [
   {
