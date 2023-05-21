@@ -3,8 +3,10 @@ package org.example.ilyaskalimullinn.notes.filter;
 import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.service.JwtService;
 import org.example.ilyaskalimullinn.notes.data.service.UserDetailsServiceImpl;
+import org.example.ilyaskalimullinn.notes.exception.JwtUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,25 +33,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null || !authorizationHeader.startsWith(AUTH_HEADER_SUBSTRING)) {
+        try {
+            String authorizationHeader = request.getHeader("Authorization");
+            if (authorizationHeader == null || !authorizationHeader.startsWith(AUTH_HEADER_SUBSTRING)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            String token = authorizationHeader.substring(AUTH_HEADER_SUBSTRING.length());
+            String username = jwtService.extractUsername(token);
+            UserDetails user = userDetailsService.loadUserByUsername(username);
+            if (jwtService.isTokenValid(token, user)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        user,
+                        null,
+                        user.getAuthorities()
+                );
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
             filterChain.doFilter(request, response);
-            return;
+        } catch (JwtUserException e) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
         }
-        String token = authorizationHeader.substring(AUTH_HEADER_SUBSTRING.length());
-        String username = jwtService.extractUsername(token);
-        UserDetails user = userDetailsService.loadUserByUsername(username);
-        if (jwtService.isTokenValid(token, user)) {
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    user,
-                    null,
-                    user.getAuthorities()
-            );
-            authToken.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        }
-        filterChain.doFilter(request, response);
     }
 }

@@ -1,15 +1,15 @@
 package org.example.ilyaskalimullinn.notes.controller;
 
-import org.example.ilyaskalimullinn.notes.data.response.GenericErrorResponse;
 import org.example.ilyaskalimullinn.notes.data.response.FieldsValidationErrorResponse;
+import org.example.ilyaskalimullinn.notes.data.response.GenericErrorResponse;
 import org.example.ilyaskalimullinn.notes.exception.FieldsValidationException;
 import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {

@@ -1,11 +1,12 @@
 package org.example.ilyaskalimullinn.notes.data.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import org.example.ilyaskalimullinn.notes.exception.JwtUserException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -60,12 +61,18 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
+        JwtParser parser = Jwts
                 .parserBuilder()
                 .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .build();
+        try {
+            return parser.parseClaimsJws(token)
+                    .getBody();
+        } catch (MalformedJwtException | UnsupportedJwtException | SignatureException e) {
+            throw new JwtUserException("Malformed token, something is not right. Please, retry logging in.");
+        } catch (ExpiredJwtException e) {
+            throw new JwtUserException("Token expired, please retry logging in.");
+        }
     }
 
     private Key getKey() {
