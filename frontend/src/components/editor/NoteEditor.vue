@@ -42,7 +42,7 @@ export default {
             inlineToolbar: true
           }
         },
-        defaultBlock: "header"
+        defaultBlock: "paragraph"
       })
     }
   },
@@ -59,6 +59,7 @@ export default {
       const note = {title: this.title, content};
       await this.saveNote(note);
       console.log(this.activeNote)
+      alert(this.error || "Saved");
     }
   },
   name: "NoteEditor"

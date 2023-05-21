@@ -15,13 +15,9 @@ import java.util.List;
 @RequestMapping("${api.uri}/notes")
 public class NoteController {
     @PostMapping("")
-    public String post(@RequestBody @Valid NoteSerializer noteSerializer,
-                       BindingResult result) {
-        if (result.hasErrors()) {
-            return "no";
-        }
+    public String post(@RequestBody NoteSerializer noteSerializer) {
         System.out.println(noteSerializer);
-        return "test";
+        return "{}";
     }
 
     @GetMapping("/test")

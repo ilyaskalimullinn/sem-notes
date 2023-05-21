@@ -51,5 +51,9 @@ function defaultApiExceptionHandler(error) {
 }
 
 export async function apiSaveNote(note) {
-  //todo
+  const response = await instance.post("/notes", {
+    ...note
+  }).catch(defaultApiExceptionHandler);
+
+  return response.data;
 }
