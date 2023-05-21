@@ -1,31 +1,25 @@
 package org.example.ilyaskalimullinn.notes.controller;
 
 import org.example.ilyaskalimullinn.notes.data.response.GenericErrorResponse;
-import org.example.ilyaskalimullinn.notes.data.response.ValidationErrorResponse;
+import org.example.ilyaskalimullinn.notes.data.response.FieldsValidationErrorResponse;
 import org.example.ilyaskalimullinn.notes.exception.FieldsValidationException;
+import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {
 
     @ExceptionHandler(FieldsValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrorResponse handleValidationException(FieldsValidationException e) {
-        return ValidationErrorResponse.builder()
+    public FieldsValidationErrorResponse handleFieldsValidationException(FieldsValidationException e) {
+        return FieldsValidationErrorResponse.builder()
                 .detail(e.getMessage())
-                .errors(e.getErrors())
+                .fieldErrors(e.getErrors())
                 .build();
     }
 
@@ -38,6 +32,12 @@ public class ExceptionHandlerController {
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public GenericErrorResponse handleBadCredentialsException(BadCredentialsException e) {
+        return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public GenericErrorResponse handleInvalidRequestException(InvalidRequestException e) {
         return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
     }
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Data
 @Builder
-public class ValidationErrorResponse {
+public class FieldsValidationErrorResponse {
     private String detail;
-    private Map<String, String> errors;
+    private Map<String, String> fieldErrors;
 }
