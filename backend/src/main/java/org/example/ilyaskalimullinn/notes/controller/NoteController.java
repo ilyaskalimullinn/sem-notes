@@ -1,5 +1,6 @@
 package org.example.ilyaskalimullinn.notes.controller;
 
+import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteContentSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteBlockSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteParagraphBlockSerializer;
@@ -30,10 +31,14 @@ public class NoteController {
                         .id("dfdsfds")
                         .data(NoteParagraphBlockSerializer.NoteParagraphBlockDataSerializer.builder().text("TEXT").build())
                         .build());
-        return NoteSerializer.builder()
+        NoteContentSerializer content = NoteContentSerializer.builder()
                 .time(100000L)
                 .version("fdshfjkdmsl")
                 .blocks(blocks)
+                .build();
+        return NoteSerializer.builder()
+                .title("Note 1")
+                .content(content)
                 .build();
     }
 }
