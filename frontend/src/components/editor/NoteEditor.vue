@@ -8,6 +8,9 @@
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
+import Checklist from "@editorjs/checklist";
+import Quote from "@editorjs/quote";
+import CodeTool from "@editorjs/code";
 import {mapActions, mapState} from "pinia";
 import {useNoteStore} from "../../stores/noteStore.js";
 
@@ -24,6 +27,18 @@ export default {
           },
           list: {
             class: List,
+            inlineToolbar: true
+          },
+          checkList: {
+            class: Checklist,
+            inlineToolbar: true
+          },
+          quote: {
+            class: Quote,
+            inlineToolbar: true
+          },
+          code: {
+            class: CodeTool,
             inlineToolbar: true
           }
         },
