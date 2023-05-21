@@ -4,7 +4,11 @@ import {apiSaveNote} from "../services/api.js";
 export const useNoteStore = defineStore({
   id: "noteStore",
   state: () => ({
-    activeNote: null,
+    activeNote: {
+      id: null,
+      content: null,
+      title: null
+    },
     requestData: {
       loading: false,
       error: false
