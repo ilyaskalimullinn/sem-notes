@@ -6,7 +6,7 @@
 import {useUserStore} from "../stores/userStore.js";
 
 export default {
-  name: "Logout",
+  name: "LogoutView",
   mounted() {
     const userStore = useUserStore();
     userStore.logout();

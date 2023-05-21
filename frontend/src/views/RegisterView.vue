@@ -12,7 +12,7 @@ import RegistrationForm from "../components/forms/RegistrationForm.vue";
 import BaseContainer from "../containers/BaseContainer.vue";
 
 export default {
-  name: "Register",
+  name: "RegisterView",
   components: {BaseContainer, RegistrationForm}
 }
 </script>

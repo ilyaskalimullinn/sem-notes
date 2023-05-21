@@ -12,7 +12,7 @@ import BaseContainer from "../containers/BaseContainer.vue";
 import LoginForm from "../components/forms/LoginForm.vue";
 
 export default {
-  name: "Login",
+  name: "LoginView",
   components: {LoginForm, BaseContainer}
 }
 </script>

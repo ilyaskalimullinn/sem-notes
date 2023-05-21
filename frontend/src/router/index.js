@@ -1,16 +1,16 @@
 import {createRouter, createWebHistory} from "vue-router";
-import Login from "../views/LoginView.vue";
-import Home from "../views/HomeView.vue";
-import Register from "../views/RegisterView.vue";
-import Logout from "../views/LogoutView.vue";
+import LoginView from "../views/LoginView.vue";
+import HomeView from "../views/HomeView.vue";
+import RegisterView from "../views/RegisterView.vue";
+import LogoutView from "../views/LogoutView.vue";
 import {useUserStore} from "../stores/userStore.js";
-import NoteEditor from "../views/NoteEditorView.vue";
+import NoteEditorView from "../views/NoteEditorView.vue";
 
 const routes = [
   {
     path: "/login",
     name: "Login",
-    component: Login,
+    component: LoginView,
     meta: {
       requiresGuest: true
     }
@@ -18,12 +18,12 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: HomeView
   },
   {
     path: "/register",
     name: "Register",
-    component: Register,
+    component: RegisterView,
     meta: {
       requiresGuest: true
     }
@@ -31,7 +31,7 @@ const routes = [
   {
     path: "/logout",
     name: "Logout",
-    component: Logout,
+    component: LogoutView,
     meta: {
       requiresAuth: true
     }
@@ -39,7 +39,7 @@ const routes = [
   {
     path: "/note/new",
     name: "NewNote",
-    component: NoteEditor,
+    component: NoteEditorView,
     meta: {
       requiresAuth: true
     }

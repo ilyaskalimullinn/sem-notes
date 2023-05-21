@@ -28,7 +28,7 @@ import {useUserStore} from "../stores/userStore.js";
 import {mapGetters, mapState} from "pinia";
 
 export default {
-  name: "Home",
+  name: "HomeView",
   components: {BaseContainer},
   computed: {
     ...mapState(useUserStore, ["user", "isAuthenticated"])

@@ -43,7 +43,7 @@ export default {
       console.log(this.activeNote)
     }
   },
-  name: "NoteEditor"
+  name: "NoteEditorView"
 }
 </script>
 
