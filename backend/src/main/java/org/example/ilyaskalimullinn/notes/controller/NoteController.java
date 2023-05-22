@@ -30,7 +30,7 @@ public class NoteController {
 
     @PostMapping("")
     public String save(@RequestBody NoteSerializer noteSerializer,
-                       @AuthenticationPrincipal Principal principal) {
+                       Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         noteService.saveNote(noteSerializer, user);
         System.out.println(noteSerializer);

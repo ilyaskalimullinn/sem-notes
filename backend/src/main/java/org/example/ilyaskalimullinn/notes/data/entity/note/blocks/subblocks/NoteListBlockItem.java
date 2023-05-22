@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "note_list_item")
+@Table(name = "note_list_block_item")
 @Getter
 @Setter
 @ToString
@@ -27,9 +27,6 @@ public class NoteListBlockItem {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
-
-    @Column(nullable = false, name = "order_num")
-    private Integer order;
 
     @Override
     public boolean equals(Object o) {

@@ -20,11 +20,11 @@ import java.util.Objects;
 @Table(name="note_list_block")
 public class NoteListBlock extends NoteBlock {
     @Column(nullable = false)
-    private String type;
+    private String style;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "list", cascade = CascadeType.ALL)
     @ToString.Exclude
-    @OrderBy("order")
+    @OrderColumn(name = "order_num")
     private List<NoteListBlockItem> items = new ArrayList<>();
 
     @Override

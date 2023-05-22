@@ -20,7 +20,7 @@ public class NoteListBlockSerializer implements NoteBlockSerializer {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class NoteListBlockDataSerializer {
-        private String type;
+        private String style;
         private List<String> items;
     }
 }

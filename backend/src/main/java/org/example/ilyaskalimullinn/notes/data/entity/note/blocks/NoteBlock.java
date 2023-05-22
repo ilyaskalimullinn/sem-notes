@@ -23,9 +23,6 @@ public abstract class NoteBlock {
     @JoinColumn(referencedColumnName = "id", nullable = false)
     protected Note note;
 
-    @Column(nullable = false, name = "order_num")
-    protected Integer order;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

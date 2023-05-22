@@ -31,9 +31,6 @@ public class NoteChecklistBlockItem {
     @Column(nullable = false)
     private Boolean checked = false;
 
-    @Column(nullable = false, name = "order_num")
-    private Integer order;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

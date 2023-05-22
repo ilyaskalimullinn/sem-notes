@@ -20,12 +20,9 @@ import java.util.Objects;
 @DiscriminatorValue("checklist")
 @Table(name="note_checklist_block")
 public class NoteChecklistBlock extends NoteBlock {
-    @Column(nullable = false)
-    private String type;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "list", cascade = CascadeType.ALL)
     @ToString.Exclude
-    @OrderBy("order")
+    @OrderColumn(name = "order_num")
     private List<NoteChecklistBlockItem> items = new ArrayList<>();
 
     @Override

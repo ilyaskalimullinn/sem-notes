@@ -20,7 +20,6 @@ public class NoteChecklistBlockSerializer implements NoteBlockSerializer {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class NoteChecklistBlockDataSerializer {
-        private String type;
         private List<NoteChecklistItemSerializer> items;
     }
 
