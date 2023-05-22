@@ -4,8 +4,10 @@ import org.example.ilyaskalimullinn.notes.data.entity.note.Note;
 import org.example.ilyaskalimullinn.notes.data.entity.note.blocks.*;
 import org.example.ilyaskalimullinn.notes.data.entity.note.blocks.subblocks.NoteChecklistBlockItem;
 import org.example.ilyaskalimullinn.notes.data.entity.note.blocks.subblocks.NoteListBlockItem;
+import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteContentSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.*;
+import org.example.ilyaskalimullinn.notes.data.serializer.note.block.data.*;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
@@ -30,6 +32,7 @@ public class NoteConverter implements GenericConverter {
     public NoteConverter() {
         this.convertiblePairs = new HashSet<>();
         this.convertiblePairs.add(new ConvertiblePair(NoteSerializer.class, Note.class));
+        this.convertiblePairs.add(new ConvertiblePair(Note.class, NoteSerializer.class));
     }
 
     @Override
@@ -81,7 +84,6 @@ public class NoteConverter implements GenericConverter {
 
         List<NoteBlock> blocks = new ArrayList<>();
 
-        //todo check if need to manually write order
         for (NoteBlockSerializer blockSerializer : blockSerializers) {
             String methodName = this.getConverterMethodName(blockSerializer.getClass(), NoteBlock.class);
 
@@ -138,7 +140,8 @@ public class NoteConverter implements GenericConverter {
                 .getItems()
                 .stream()
                 .map(this::convertStringToNoteListBlockItem)
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
+        ;
 
         items.forEach(item -> item.setList(listBlock));
         listBlock.setItems(items);
@@ -160,19 +163,142 @@ public class NoteConverter implements GenericConverter {
         List<NoteChecklistBlockItem> items = noteChecklistBlockSerializer.getData()
                 .getItems()
                 .stream()
-                .map(this::convertStringToNoteChecklistBlockItem)
-                .collect(Collectors.toList());;
+                .map(this::convertNoteChecklistBlockItemSerializerToNoteChecklistBlockItem)
+                .collect(Collectors.toList());
+        ;
 
         items.forEach(item -> item.setList(checklistBlock));
         checklistBlock.setItems(items);
         return checklistBlock;
     }
 
-    protected NoteChecklistBlockItem convertStringToNoteChecklistBlockItem
-            (NoteChecklistBlockSerializer.NoteChecklistItemSerializer noteChecklistItemSerializer) {
+    protected NoteChecklistBlockItem convertNoteChecklistBlockItemSerializerToNoteChecklistBlockItem
+            (NoteChecklistBlockItemSerializer noteChecklistBlockItemSerializer) {
         return NoteChecklistBlockItem.builder()
-                .checked(noteChecklistItemSerializer.getChecked())
-                .text(noteChecklistItemSerializer.getText())
+                .checked(noteChecklistBlockItemSerializer.getChecked())
+                .text(noteChecklistBlockItemSerializer.getText())
+                .build();
+    }
+
+    protected NoteSerializer convertNoteToNoteSerializer(Note note) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+        List<NoteBlockSerializer> blockSerializers = new ArrayList<>();
+
+        for (NoteBlock block : note.getBlocks()) {
+            String methodName = this.getConverterMethodName(block.getClass(), NoteBlockSerializer.class);
+            Method converterMethod = this.getClass().getDeclaredMethod(methodName, block.getClass());
+
+            NoteBlockSerializer blockSerializer = (NoteBlockSerializer) converterMethod.invoke(this, block);
+
+            blockSerializers.add(blockSerializer);
+        }
+
+        NoteContentSerializer contentSerializer = NoteContentSerializer.builder()
+                .version(note.getEditorVersion())
+                .blocks(blockSerializers)
+                .build();
+
+        return NoteSerializer.builder()
+                .title(note.getTitle())
+                .content(contentSerializer)
+                .build();
+    }
+
+    protected NoteParagraphBlockSerializer convertNoteParagraphBlockToNoteBlockSerializer(
+            NoteParagraphBlock noteParagraphBlock
+    ) {
+        NoteParagraphBlockDataSerializer data = NoteParagraphBlockDataSerializer.builder()
+                .text(noteParagraphBlock.getText())
+                .build();
+
+        return NoteParagraphBlockSerializer.builder()
+                .data(data)
+                .build();
+    }
+
+    protected NoteHeaderBlockSerializer convertNoteHeaderBlockToNoteBlockSerializer(
+            NoteHeaderBlock noteHeaderBlock
+    ) {
+        NoteHeaderBlockDataSerializer data = NoteHeaderBlockDataSerializer.builder()
+                .level(noteHeaderBlock.getLevel())
+                .text(noteHeaderBlock.getText())
+                .build();
+
+        return NoteHeaderBlockSerializer.builder()
+                .data(data)
+                .build();
+    }
+
+    protected NoteQuoteBlockSerializer convertNoteQuoteBlockToNoteBlockSerializer(
+        NoteQuoteBlock noteQuoteBlock
+    ) {
+        NoteQuoteBlockDataSerializer data = NoteQuoteBlockDataSerializer.builder()
+                .alignment(noteQuoteBlock.getAlignment())
+                .caption(noteQuoteBlock.getCaption())
+                .text(noteQuoteBlock.getText())
+                .build();
+
+        return NoteQuoteBlockSerializer.builder()
+                .data(data)
+                .build();
+    }
+
+    protected NoteCodeBlockSerializer convertNoteCodeBlockToNoteBlockSerializer(
+            NoteCodeBlock noteCodeBlock
+    ) {
+        NoteCodeBlockDataSerializer data = NoteCodeBlockDataSerializer.builder()
+                .code(noteCodeBlock.getCode())
+                .build();
+
+        return NoteCodeBlockSerializer.builder()
+                .data(data)
+                .build();
+    }
+
+    protected NoteListBlockSerializer convertNoteListBlockToNoteBlockSerializer(
+            NoteListBlock noteListBlock
+    ) {
+        List<String> items = noteListBlock.getItems().stream()
+                .map(this::convertNoteListBlockItemToString)
+                .toList();
+
+        NoteListBlockDataSerializer data = NoteListBlockDataSerializer.builder()
+                .style(noteListBlock.getStyle())
+                .items(items)
+                .build();
+
+        return NoteListBlockSerializer.builder()
+                .data(data)
+                .build();
+    }
+
+    protected String convertNoteListBlockItemToString(NoteListBlockItem noteListBlockItem) {
+        return noteListBlockItem.getText();
+    }
+
+    protected NoteChecklistBlockSerializer convertNoteChecklistBlockToNoteBlockSerializer(
+            NoteChecklistBlock noteChecklistBlock
+    ) {
+        List<NoteChecklistBlockItemSerializer> items = noteChecklistBlock.getItems()
+                .stream()
+                .map(this::convertNoteChecklistBlockItemToNoteChecklistItemSerializer)
+                .toList();
+
+        NoteChecklistBlockDataSerializer data = NoteChecklistBlockDataSerializer.builder()
+                .items(items)
+                .build();
+
+        return NoteChecklistBlockSerializer.builder()
+                .data(data)
+                .build();
+    }
+
+    protected NoteChecklistBlockItemSerializer convertNoteChecklistBlockItemToNoteChecklistItemSerializer(
+            NoteChecklistBlockItem noteChecklistBlockItem
+    ) {
+        return NoteChecklistBlockItemSerializer.builder()
+                .checked(noteChecklistBlockItem.getChecked())
+                .text(noteChecklistBlockItem.getText())
                 .build();
     }
 }

@@ -32,4 +32,15 @@ public class NoteService {
         noteRepository.save(note);
 
     }
+
+    public Note getNote(Long noteId, User user) {
+        return noteRepository.findByIdAndAuthor(noteId, user);
+    }
+
+    public NoteSerializer getSerializedNote(Long noteId, User user) {
+        Note note = noteRepository.findByIdAndAuthor(noteId, user);
+        return (NoteSerializer) noteConverter.convert(note,
+                TypeDescriptor.valueOf(Note.class),
+                TypeDescriptor.valueOf(NoteSerializer.class));
+    }
 }

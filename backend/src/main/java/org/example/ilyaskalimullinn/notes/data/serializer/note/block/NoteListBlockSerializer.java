@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.ilyaskalimullinn.notes.data.serializer.note.block.data.NoteListBlockDataSerializer;
 
 import java.util.List;
 
@@ -14,13 +15,4 @@ import java.util.List;
 public class NoteListBlockSerializer implements NoteBlockSerializer {
     private String id;
     private NoteListBlockDataSerializer data;
-
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class NoteListBlockDataSerializer {
-        private String style;
-        private List<String> items;
-    }
 }

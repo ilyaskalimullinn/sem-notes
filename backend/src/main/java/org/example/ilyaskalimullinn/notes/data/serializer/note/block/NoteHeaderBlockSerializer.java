@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.ilyaskalimullinn.notes.data.serializer.note.block.data.NoteHeaderBlockDataSerializer;
 
 @Data
 @Builder
@@ -12,13 +13,4 @@ import lombok.NoArgsConstructor;
 public class NoteHeaderBlockSerializer implements NoteBlockSerializer {
     private String id;
     private NoteHeaderBlockDataSerializer data;
-
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class NoteHeaderBlockDataSerializer {
-        private String text;
-        private Integer level;
-    }
 }

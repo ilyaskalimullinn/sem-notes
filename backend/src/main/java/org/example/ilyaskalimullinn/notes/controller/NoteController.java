@@ -5,6 +5,7 @@ import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteContentSerial
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteBlockSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteParagraphBlockSerializer;
+import org.example.ilyaskalimullinn.notes.data.serializer.note.block.data.NoteParagraphBlockDataSerializer;
 import org.example.ilyaskalimullinn.notes.data.service.NoteService;
 import org.example.ilyaskalimullinn.notes.data.service.UserDetailsServiceImpl;
 import org.example.ilyaskalimullinn.notes.data.service.UserService;
@@ -37,12 +38,19 @@ public class NoteController {
         return "{}";
     }
 
+    @GetMapping("/{noteId}")
+    public NoteSerializer get(@PathVariable("noteId") Long noteId,
+                              Principal principal) {
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+        return this.noteService.getSerializedNote(noteId, user);
+    }
+
     @GetMapping("/test")
     public NoteSerializer getTest() {
         List<NoteBlockSerializer> blocks = new ArrayList<>();
         blocks.add(NoteParagraphBlockSerializer.builder()
                         .id("dfdsfds")
-                        .data(NoteParagraphBlockSerializer.NoteParagraphBlockDataSerializer.builder().text("TEXT").build())
+                        .data(NoteParagraphBlockDataSerializer.builder().text("TEXT").build())
                         .build());
         NoteContentSerializer content = NoteContentSerializer.builder()
                 .time(100000L)
