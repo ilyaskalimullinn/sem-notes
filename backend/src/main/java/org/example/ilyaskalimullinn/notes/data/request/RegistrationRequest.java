@@ -1,7 +1,7 @@
 package org.example.ilyaskalimullinn.notes.data.request;
 
 import lombok.Data;
-import org.example.ilyaskalimullinn.notes.utils.validator.FieldMatch;
+import org.example.ilyaskalimullinn.notes.util.validator.FieldMatch;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;

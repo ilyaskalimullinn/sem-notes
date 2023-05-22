@@ -26,7 +26,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package org.example.ilyaskalimullinn.notes.utils.validator;
+package org.example.ilyaskalimullinn.notes.util.validator;
 
 import org.springframework.beans.BeanWrapperImpl;
 
