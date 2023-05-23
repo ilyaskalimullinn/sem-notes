@@ -16,7 +16,7 @@
         <router-link :to="{name: 'Logout'}">Logout</router-link>
       </li>
       <li>
-        <router-link :to="{name: 'NewNote'}">Create note</router-link>
+        <router-link :to="{name: 'NoteCreate'}">Create note</router-link>
       </li>
     </ul>
   </BaseContainer>

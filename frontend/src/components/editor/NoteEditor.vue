@@ -2,6 +2,7 @@
   <input type="text" v-model="title" placeholder="Title">
   <div id="editorjs"></div>
   <button @click="submit">Save</button>
+  <div class="error" v-if="this.error">{{error.message}}</div>
 </template>
 
 <script>
@@ -53,10 +54,14 @@ export default {
       activeNote: "activeNote"
     })
   },
-  mounted() {
-    if (this.activeNote) {
-      this.title = this.activeNote.title;
-      this.editor.data = this.activeNote.content;
+  watch: {
+    activeNote(newValue, oldValue) {
+      if (newValue) {
+        this.editor.isReady.then(() => {
+          this.title = newValue.title;
+          this.editor.render(newValue.content);
+        })
+      }
     }
   },
   methods: {

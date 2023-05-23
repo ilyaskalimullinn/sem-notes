@@ -45,10 +45,14 @@ function defaultApiExceptionHandler(error) {
     console.error(error.response);
 
     if (error.response.status === 403) {
-      throw new Error("Error with authentication, please retry logging in");
+      let err = new Error("Error with authentication, please retry logging in")
+      err.statusCode = error.response.status;
+      throw err;
     }
 
-    throw new Error(error.response.data.detail || "Unknown error");
+    let err = new Error(error.response.data.detail || "Unknown error");
+    err.statusCode = error.response.status;
+    throw err;
   } else {
     console.error('Unknown error: ', error.message);
     throw new Error("Unknown error, please try again");
@@ -59,6 +63,13 @@ export async function apiSaveNote(note) {
   const response = await instance.post("/notes", {
     ...note
   }).catch(defaultApiExceptionHandler);
+
+  return response.data;
+}
+
+export async function apiGetNoteFull(id) {
+  const response = await instance.get(`/notes/${id}`)
+    .catch(defaultApiExceptionHandler);
 
   return response.data;
 }

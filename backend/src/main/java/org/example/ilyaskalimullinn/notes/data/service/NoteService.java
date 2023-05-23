@@ -7,6 +7,7 @@ import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteBlockSerializer;
+import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
 import org.example.ilyaskalimullinn.notes.exception.NotePersistenceException;
 import org.example.ilyaskalimullinn.notes.util.converter.NoteConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,13 @@ public class NoteService {
     }
 
     public NoteSerializer getSerializedNote(Long noteId, User user) {
+        // todo exception handling, 404
         Note note = noteRepository.findByIdAndAuthor(noteId, user);
+
+        if (note == null) {
+            throw new NotFoundException("Note not found");
+        }
+
         return (NoteSerializer) noteConverter.convert(note,
                 TypeDescriptor.valueOf(Note.class),
                 TypeDescriptor.valueOf(NoteSerializer.class));

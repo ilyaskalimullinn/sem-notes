@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {apiSaveNote} from "../services/api.js";
+import {apiGetNoteFull, apiSaveNote} from "../services/api.js";
 
 export const useNoteStore = defineStore({
   id: "noteStore",
@@ -11,7 +11,7 @@ export const useNoteStore = defineStore({
     },
     requestData: {
       loading: false,
-      error: false
+      error: null
     }
   }),
   actions: {
@@ -21,7 +21,15 @@ export const useNoteStore = defineStore({
       try {
         const response = await apiSaveNote(this.activeNote);
       } catch(error) {
-        this.requestData.error = error.message
+        this.requestData.error = error
+      }
+    },
+    async fetchActiveNoteById(id) {
+      try {
+        this.activeNote = await apiGetNoteFull(id);
+        console.log(this.activeNote);
+      } catch(error) {
+        this.requestData.error = error
       }
     },
     clearError() {

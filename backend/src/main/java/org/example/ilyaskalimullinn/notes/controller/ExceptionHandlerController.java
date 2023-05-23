@@ -4,6 +4,7 @@ import org.example.ilyaskalimullinn.notes.data.response.FieldsValidationErrorRes
 import org.example.ilyaskalimullinn.notes.data.response.GenericErrorResponse;
 import org.example.ilyaskalimullinn.notes.exception.FieldsValidationException;
 import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
+import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
 import org.example.ilyaskalimullinn.notes.exception.NotePersistenceException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,12 @@ public class ExceptionHandlerController {
     @ExceptionHandler(NotePersistenceException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public GenericErrorResponse handleNotePersistenceException(NotePersistenceException e) {
+        return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public GenericErrorResponse handleNotFoundException(NotFoundException e) {
         return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
     }
 }

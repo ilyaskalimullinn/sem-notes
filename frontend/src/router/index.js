@@ -5,6 +5,7 @@ import RegisterView from "../views/RegisterView.vue";
 import LogoutView from "../views/LogoutView.vue";
 import {useUserStore} from "../stores/userStore.js";
 import NoteEditorView from "../views/NoteEditorView.vue";
+import NotFound404 from "../views/errors/NotFound404.vue";
 
 const routes = [
   {
@@ -37,13 +38,42 @@ const routes = [
     }
   },
   {
-    path: "/note/new",
-    name: "NewNote",
-    component: NoteEditorView,
-    meta: {
-      requiresAuth: true
-    }
+    path: '/notes',
+    redirect: {name: 'Home'},
+    children: [
+      {
+        path: ':id',
+        name: 'NoteEdit',
+        component: NoteEditorView,
+        meta: {
+          requiresAuth: true
+        },
+      },
+      {
+        path: 'new',
+        name: 'NoteCreate',
+        component: NoteEditorView,
+        meta: {
+          requiresAuth: true
+        },
+      }
+    ]
   },
+  {
+    path: '/error',
+    redirect: {name: 'NotFound404'},
+    children: [
+      {
+        path: 'not-found',
+        name: 'NotFound404',
+        component: NotFound404
+      },
+    ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: {name: 'NotFound404'}
+  }
 ]
 
 const router = createRouter({
