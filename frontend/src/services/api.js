@@ -75,6 +75,13 @@ export async function apiUpdateNote(note) {
   return response.data;
 }
 
+export async function apiDeleteNoteById(id) {
+  const response = await instance.delete(`/notes/${id}`)
+    .catch(defaultApiExceptionHandler);
+
+  return response.data;
+}
+
 export async function apiGetNoteFull(id) {
   const response = await instance.get(`/notes/${id}`)
     .catch(defaultApiExceptionHandler);

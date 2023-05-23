@@ -1,6 +1,7 @@
 package org.example.ilyaskalimullinn.notes.controller;
 
 import org.example.ilyaskalimullinn.notes.data.entity.User;
+import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteContentSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
@@ -70,5 +71,12 @@ public class NoteController {
         }
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         return noteService.updateNote(noteSerializer, user);
+    }
+
+    @DeleteMapping("/{noteId}")
+    public NoteDeleteResponse delete(@PathVariable("noteId") Long noteId,
+                                     Principal principal) {
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+        return noteService.deleteNoteById(noteId, user);
     }
 }

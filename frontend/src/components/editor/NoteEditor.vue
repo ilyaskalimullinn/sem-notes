@@ -2,6 +2,7 @@
   <input type="text" v-model="activeNote.title" placeholder="Title">
   <div id="editorjs"></div>
   <button @click="submit">Save</button>
+  <button @click="this.delete">Delete</button>
   <div class="error" v-if="this.error">{{error.message}}</div>
 </template>
 
@@ -48,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useNoteStore, {
+    ...mapState(useNoteStore, {
       error: (state) => state.requestData.error,
       activeNote: "activeNote"
     })
@@ -63,14 +64,20 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useNoteStore, ["saveNote"]),
+    ...mapActions(useNoteStore, ["saveNote", "deleteActiveNote"]),
     async submit() {
       await this.saveNote(await this.editor.save());
-      console.log(this.activeNote)
       if (!this.error && !this.$route.params.id) {
         this.$router.push({name: "NoteEdit", params: {id: this.activeNote.id}})
+        return;
       }
       alert(this.error || "Saved");
+    },
+    async delete() {
+      await this.deleteActiveNote();
+      if (!this.error) {
+        this.$router.push({name: "Home"});
+      }
     }
   },
   name: "NoteEditor"

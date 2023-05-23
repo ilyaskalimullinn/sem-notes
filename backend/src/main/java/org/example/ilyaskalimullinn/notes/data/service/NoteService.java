@@ -3,6 +3,7 @@ package org.example.ilyaskalimullinn.notes.data.service;
 import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.entity.note.Note;
 import org.example.ilyaskalimullinn.notes.data.repository.NoteRepository;
+import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
@@ -79,7 +80,21 @@ public class NoteService {
                     .note(new NoteEditSerializer(note))
                     .build();
         } catch (Exception e) {
-            throw new NotePersistenceException("Something went wrong, could not save note. Please, try again");
+            throw new NotePersistenceException("Something went wrong, could not update note. Please, try again");
+        }
+    }
+
+    public NoteDeleteResponse deleteNoteById(Long noteId, User user) {
+        try {
+
+            noteRepository.deleteByIdAndAuthor(noteId, user);
+
+            return NoteDeleteResponse.builder()
+                    .detail("Deleted")
+                    .id(noteId)
+                    .build();
+        } catch (Exception e) {
+            throw new NotePersistenceException("Something went wrong, could not delete note. Please, try again");
         }
     }
 }
