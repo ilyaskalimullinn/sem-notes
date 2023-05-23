@@ -71,22 +71,4 @@ public class NoteController {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         return noteService.updateNote(noteSerializer, user);
     }
-
-    @GetMapping("/test")
-    public NoteSerializer getTest() {
-        List<NoteBlockSerializer> blocks = new ArrayList<>();
-        blocks.add(NoteParagraphBlockSerializer.builder()
-                        .id("dfdsfds")
-                        .data(NoteParagraphBlockDataSerializer.builder().text("TEXT").build())
-                        .build());
-        NoteContentSerializer content = NoteContentSerializer.builder()
-                .time(100000L)
-                .version("fdshfjkdmsl")
-                .blocks(blocks)
-                .build();
-        return NoteSerializer.builder()
-                .title("Note 1")
-                .content(content)
-                .build();
-    }
 }
