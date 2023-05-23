@@ -1,5 +1,5 @@
 <template>
-  <input type="text" v-model="title" placeholder="Title">
+  <input type="text" v-model="activeNote.title" placeholder="Title">
   <div id="editorjs"></div>
   <button @click="submit">Save</button>
   <div class="error" v-if="this.error">{{error.message}}</div>
@@ -12,13 +12,12 @@ import List from "@editorjs/list";
 import Checklist from "@editorjs/checklist";
 import Quote from "@editorjs/quote";
 import CodeTool from "@editorjs/code";
-import {mapActions, mapState} from "pinia";
+import {mapActions, mapState, mapWritableState} from "pinia";
 import {useNoteStore} from "../../stores/noteStore.js";
 
 export default {
   data() {
     return {
-      title: "",
       editor: new EditorJS({
         holder: "editorjs",
         tools: {
@@ -49,7 +48,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(useNoteStore, {
+    ...mapWritableState(useNoteStore, {
       error: (state) => state.requestData.error,
       activeNote: "activeNote"
     })
@@ -58,7 +57,6 @@ export default {
     activeNote(newValue, oldValue) {
       if (newValue) {
         this.editor.isReady.then(() => {
-          this.title = newValue.title;
           this.editor.render(newValue.content);
         })
       }
@@ -67,10 +65,11 @@ export default {
   methods: {
     ...mapActions(useNoteStore, ["saveNote"]),
     async submit() {
-      const content = await this.editor.save();
-      const note = {title: this.title, content};
-      await this.saveNote(note);
+      await this.saveNote(await this.editor.save());
       console.log(this.activeNote)
+      if (!this.error && !this.$route.params.id) {
+        this.$router.push({name: "NoteEdit", params: {id: this.activeNote.id}})
+      }
       alert(this.error || "Saved");
     }
   },

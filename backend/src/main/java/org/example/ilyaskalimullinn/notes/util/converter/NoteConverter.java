@@ -41,6 +41,7 @@ public class NoteConverter implements GenericConverter {
     }
 
     @Override
+    @NonNull
     public Object convert(Object source,
                           @NonNull TypeDescriptor sourceType,
                           @NonNull TypeDescriptor targetType) {
@@ -78,6 +79,7 @@ public class NoteConverter implements GenericConverter {
         Note note = Note.builder()
                 .title(noteSerializer.getTitle())
                 .editorVersion(noteSerializer.getContent().getVersion())
+                .id(noteSerializer.getId())
                 .build();
 
         List<NoteBlockSerializer> blockSerializers = noteSerializer.getContent().getBlocks();
@@ -201,6 +203,7 @@ public class NoteConverter implements GenericConverter {
         return NoteSerializer.builder()
                 .title(note.getTitle())
                 .content(contentSerializer)
+                .id(note.getId())
                 .build();
     }
 

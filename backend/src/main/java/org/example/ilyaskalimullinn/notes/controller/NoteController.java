@@ -12,6 +12,7 @@ import org.example.ilyaskalimullinn.notes.data.service.NoteService;
 import org.example.ilyaskalimullinn.notes.data.service.UserDetailsServiceImpl;
 import org.example.ilyaskalimullinn.notes.data.service.UserService;
 import org.example.ilyaskalimullinn.notes.exception.FieldsValidationException;
+import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,21 @@ public class NoteController {
                               Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         return this.noteService.getSerializedNote(noteId, user);
+    }
+
+    @PutMapping("/{noteId}")
+    public NoteEditResponse update(@PathVariable("noteId") Long noteId,
+            @RequestBody @Valid NoteSerializer noteSerializer,
+                                 BindingResult result,
+                                 Principal principal) {
+        if (result.hasErrors()) {
+            throw new FieldsValidationException("Errors in note request", result.getFieldErrors());
+        }
+        if (!noteId.equals(noteSerializer.getId())) {
+            throw new InvalidRequestException("Note ID's mismatch");
+        }
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+        return noteService.updateNote(noteSerializer, user);
     }
 
     @GetMapping("/test")

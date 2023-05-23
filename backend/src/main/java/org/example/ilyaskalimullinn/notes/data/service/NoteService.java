@@ -7,6 +7,7 @@ import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteBlockSerializer;
+import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
 import org.example.ilyaskalimullinn.notes.exception.NotePersistenceException;
 import org.example.ilyaskalimullinn.notes.util.converter.NoteConverter;
@@ -30,6 +31,11 @@ public class NoteService {
         try {
             Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
                     TypeDescriptor.valueOf(Note.class));
+
+            if (note.getId() != null) {
+                throw new InvalidRequestException("Bad request, new note already has an ID");
+            }
+
             note.setAuthor(user);
 
             noteRepository.save(note);
@@ -49,7 +55,6 @@ public class NoteService {
     }
 
     public NoteSerializer getSerializedNote(Long noteId, User user) {
-        // todo exception handling, 404
         Note note = noteRepository.findByIdAndAuthor(noteId, user);
 
         if (note == null) {
@@ -59,5 +64,22 @@ public class NoteService {
         return (NoteSerializer) noteConverter.convert(note,
                 TypeDescriptor.valueOf(Note.class),
                 TypeDescriptor.valueOf(NoteSerializer.class));
+    }
+
+    public NoteEditResponse updateNote(NoteSerializer noteSerializer, User user) {
+        try {
+            Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
+                    TypeDescriptor.valueOf(Note.class));
+            note.setAuthor(user);
+
+            noteRepository.save(note);
+
+            return NoteEditResponse.builder()
+                    .detail("Updated")
+                    .note(new NoteEditSerializer(note))
+                    .build();
+        } catch (Exception e) {
+            throw new NotePersistenceException("Something went wrong, could not save note. Please, try again");
+        }
     }
 }

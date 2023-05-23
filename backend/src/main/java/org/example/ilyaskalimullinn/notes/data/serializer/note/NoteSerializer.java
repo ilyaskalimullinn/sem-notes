@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 public class NoteSerializer {
+    // nullable
+    private Long id;
     @NotNull
     @NotBlank
     private String title;

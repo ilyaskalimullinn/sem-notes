@@ -67,6 +67,14 @@ export async function apiSaveNote(note) {
   return response.data;
 }
 
+export async function apiUpdateNote(note) {
+  const response = await instance.put(`/notes/${note.id}`, {
+    ...note
+  }).catch(defaultApiExceptionHandler);
+
+  return response.data;
+}
+
 export async function apiGetNoteFull(id) {
   const response = await instance.get(`/notes/${id}`)
     .catch(defaultApiExceptionHandler);
