@@ -44,6 +44,7 @@ public class Note {
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(updatable = false)
     private Date createdAt;
 
     @UpdateTimestamp

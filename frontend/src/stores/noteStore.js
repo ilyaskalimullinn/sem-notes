@@ -14,7 +14,7 @@ export const useNoteStore = defineStore({
       error: null
     },
     noteList: [],
-    page: 1,
+    page: 0,
     size: 5
   }),
   actions: {

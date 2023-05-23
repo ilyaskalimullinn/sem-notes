@@ -81,7 +81,7 @@ export default {
     async doDelete() {
       await this.deleteActiveNote();
       if (!this.error) {
-        this.$router.push({name: "Home"});
+        this.$router.push({name: "NoteList"});
       }
     }
   },
