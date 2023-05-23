@@ -26,7 +26,6 @@ public class NoteService {
     private NoteRepository noteRepository;
 
     public NoteEditResponse saveNote(NoteSerializer noteSerializer, User user) {
-        // todo exception handling
         try {
             Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
                     TypeDescriptor.valueOf(Note.class));
