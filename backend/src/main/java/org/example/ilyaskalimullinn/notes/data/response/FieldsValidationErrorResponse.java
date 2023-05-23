@@ -4,10 +4,11 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.Map;
+import java.util.Set;
 
 @Data
 @Builder
 public class FieldsValidationErrorResponse {
     private String detail;
-    private Map<String, String> fieldErrors;
+    private Map<String, Set<String>> fieldErrors;
 }

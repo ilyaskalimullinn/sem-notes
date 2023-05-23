@@ -28,11 +28,7 @@ public class AuthController {
     public AuthenticationResponse register(@RequestBody @Valid RegistrationRequest request,
                                            BindingResult result) {
         if (result.hasErrors()) {
-            Map<String, String> errors = result.getFieldErrors()
-                    .stream()
-                    .collect(Collectors.toMap(FieldError::getField,
-                            DefaultMessageSourceResolvable::getDefaultMessage));
-            throw new FieldsValidationException("Fields filled with errors", errors);
+            throw new FieldsValidationException("Fields filled with errors", result.getFieldErrors());
         }
         return userService.register(request);
     }
@@ -42,11 +38,7 @@ public class AuthController {
     public AuthenticationResponse login(@RequestBody @Valid LoginRequest request,
                                         BindingResult result) {
         if (result.hasErrors()) {
-            Map<String, String> errors = result.getFieldErrors()
-                    .stream()
-                    .collect(Collectors.toMap(FieldError::getField,
-                            DefaultMessageSourceResolvable::getDefaultMessage));
-            throw new FieldsValidationException("Fields filled with errors", errors);
+            throw new FieldsValidationException("Fields filled with errors", result.getFieldErrors());
         }
         return userService.login(request);
     }

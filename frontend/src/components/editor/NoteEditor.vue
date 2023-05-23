@@ -42,7 +42,8 @@ export default {
             inlineToolbar: true
           }
         },
-        defaultBlock: "paragraph"
+        defaultBlock: "paragraph",
+        autofocus: true
       })
     }
   },
@@ -51,6 +52,12 @@ export default {
       error: (state) => state.requestData.error,
       activeNote: "activeNote"
     })
+  },
+  mounted() {
+    if (this.activeNote) {
+      this.title = this.activeNote.title;
+      this.editor.data = this.activeNote.content;
+    }
   },
   methods: {
     ...mapActions(useNoteStore, ["saveNote"]),

@@ -26,6 +26,7 @@ export const useUserStore = defineStore('userStore', {
       try {
         const data = await apiLogin(email, password);
         storeTokenInStorage(data["token"]);
+        this.token = data["token"];
         this.setUser(data["user"]);
       } catch (error) {
         this.setError(error.message);
@@ -40,6 +41,7 @@ export const useUserStore = defineStore('userStore', {
       try {
         const data = await apiRegister(email, fullName, password, passwordRepeat);
         storeTokenInStorage(data["token"]);
+        this.token = data["token"];
         this.setUser(data["user"]);
       } catch (error) {
         this.setError(error.message);

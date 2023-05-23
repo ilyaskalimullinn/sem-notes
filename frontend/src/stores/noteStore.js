@@ -17,12 +17,15 @@ export const useNoteStore = defineStore({
   actions: {
     async saveNote(note) {
       this.activeNote = note;
-      this.error = null;
+      this.clearError();
       try {
         const response = await apiSaveNote(this.activeNote);
       } catch(error) {
         this.requestData.error = error.message
       }
+    },
+    clearError() {
+      this.requestData.error = null;
     }
   }
 })

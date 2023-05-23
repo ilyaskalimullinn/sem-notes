@@ -3,11 +3,15 @@ package org.example.ilyaskalimullinn.notes.data.service;
 import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.entity.note.Note;
 import org.example.ilyaskalimullinn.notes.data.repository.NoteRepository;
+import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
+import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteBlockSerializer;
+import org.example.ilyaskalimullinn.notes.exception.NotePersistenceException;
 import org.example.ilyaskalimullinn.notes.util.converter.NoteConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,15 +25,22 @@ public class NoteService {
     @Autowired
     private NoteRepository noteRepository;
 
-    public void saveNote(NoteSerializer noteSerializer, User user) {
-        List<NoteBlockSerializer> blocks = noteSerializer.getContent().getBlocks();
+    public NoteEditResponse saveNote(NoteSerializer noteSerializer, User user) {
+        // todo exception handling
+        try {
+            Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
+                    TypeDescriptor.valueOf(Note.class));
+            note.setAuthor(user);
 
-        Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()), TypeDescriptor.valueOf(Note.class));
-        note.setAuthor(user);
+            noteRepository.save(note);
 
-        System.out.println(note);
-
-        noteRepository.save(note);
+            return NoteEditResponse.builder()
+                    .detail("Created")
+                    .note(new NoteEditSerializer(note))
+                    .build();
+        } catch (Exception e) {
+            throw new NotePersistenceException("Something went wrong, could not save note. Please, try again");
+        }
 
     }
 

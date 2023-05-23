@@ -43,6 +43,11 @@ export async function apiRegister(email, fullName, password, passwordRepeat) {
 function defaultApiExceptionHandler(error) {
   if (error.response) {
     console.error(error.response);
+
+    if (error.response.status === 403) {
+      throw new Error("Error with authentication, please retry logging in");
+    }
+
     throw new Error(error.response.data.detail || "Unknown error");
   } else {
     console.error('Unknown error: ', error.message);

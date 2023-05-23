@@ -1,40 +1,35 @@
 package org.example.ilyaskalimullinn.notes.exception;
 
 
-import java.util.Map;
+import lombok.Data;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.FieldError;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Data
 public class FieldsValidationException extends RuntimeException {
-    private Map<String, String> errors;
+    private Map<String, Set<String>> errors;
 
-    public FieldsValidationException(Map<String, String> errors) {
-        this.errors = errors;
-    }
-
-    public FieldsValidationException(String message, Map<String, String> errors) {
+    public FieldsValidationException(String message, List<FieldError> fieldErrors) {
         super(message);
-        this.errors = errors;
-    }
+        this.errors = new HashMap<>();
+        for (FieldError fieldError : fieldErrors) {
+            Set<String> errorMessages;
+            if (this.errors.containsKey(fieldError.getField())) {
+                errorMessages = this.errors.get(fieldError.getField());
+            } else {
+                errorMessages = new HashSet<>();
+                this.errors.put(fieldError.getField(), errorMessages);
+            }
 
-    public FieldsValidationException(String message, Throwable cause, Map<String, String> errors) {
-        super(message, cause);
-        this.errors = errors;
-    }
+            String errorMesage = fieldError.getDefaultMessage();
+            if (errorMesage == null) {
+                errorMesage = "Validation error";
+            }
 
-    public FieldsValidationException(Throwable cause, Map<String, String> errors) {
-        super(cause);
-        this.errors = errors;
-    }
-
-    public FieldsValidationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, Map<String, String> errors) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.errors = errors;
-    }
-
-    public Map<String, String> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(Map<String, String> errors) {
-        this.errors = errors;
+            errorMessages.add(errorMesage);
+        }
     }
 }

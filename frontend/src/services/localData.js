@@ -7,7 +7,7 @@ export function getTokenFromStorage() {
 }
 
 export function clearTokenInStorage() {
-  localStorage.setItem("token", null);
+  localStorage.removeItem("token");
 }
 
 export function storeUserInStorage(user) {
@@ -23,5 +23,5 @@ export function getUserFromStorage() {
 }
 
 export function clearUserInStorage() {
-  localStorage.setItem("user", null);
+  localStorage.removeItem("user");
 }

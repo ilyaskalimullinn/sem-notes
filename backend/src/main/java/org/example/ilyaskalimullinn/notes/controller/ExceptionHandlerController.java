@@ -4,6 +4,7 @@ import org.example.ilyaskalimullinn.notes.data.response.FieldsValidationErrorRes
 import org.example.ilyaskalimullinn.notes.data.response.GenericErrorResponse;
 import org.example.ilyaskalimullinn.notes.exception.FieldsValidationException;
 import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
+import org.example.ilyaskalimullinn.notes.exception.NotePersistenceException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,6 +39,12 @@ public class ExceptionHandlerController {
     @ExceptionHandler(InvalidRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public GenericErrorResponse handleInvalidRequestException(InvalidRequestException e) {
+        return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
+    }
+
+    @ExceptionHandler(NotePersistenceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public GenericErrorResponse handleNotePersistenceException(NotePersistenceException e) {
         return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
     }
 }

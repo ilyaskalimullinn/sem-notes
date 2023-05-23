@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.data.NoteListBlockDataSerializer;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -14,5 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class NoteListBlockSerializer implements NoteBlockSerializer {
     private String id;
+    @NotNull
     private NoteListBlockDataSerializer data;
 }
