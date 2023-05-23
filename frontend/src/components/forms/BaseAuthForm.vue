@@ -18,7 +18,7 @@
     </div>
 
     <div class="error" v-if="this.error">
-      {{ this.error }}
+      {{ this.error.message }}
     </div>
 
   </form>

@@ -29,7 +29,7 @@ export const useUserStore = defineStore('userStore', {
         this.token = data["token"];
         this.setUser(data["user"]);
       } catch (error) {
-        this.setError(error.message);
+        this.setError(error);
       }
 
       this.loading = false;
@@ -44,7 +44,7 @@ export const useUserStore = defineStore('userStore', {
         this.token = data["token"];
         this.setUser(data["user"]);
       } catch (error) {
-        this.setError(error.message);
+        this.setError(error);
       }
 
       this.loading = false;
