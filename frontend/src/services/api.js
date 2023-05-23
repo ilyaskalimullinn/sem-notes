@@ -88,3 +88,12 @@ export async function apiGetNoteFull(id) {
 
   return response.data;
 }
+
+export async function apiGetNotes(page, size) {
+  const response = await instance.get(`/notes/`, {
+    params: {page, size}
+  })
+    .catch(defaultApiExceptionHandler);
+
+  return response.data;
+}

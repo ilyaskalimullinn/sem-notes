@@ -3,6 +3,7 @@ package org.example.ilyaskalimullinn.notes.controller;
 import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
+import org.example.ilyaskalimullinn.notes.data.response.NotesBriefResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteContentSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
@@ -56,6 +57,13 @@ public class NoteController {
                               Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         return this.noteService.getSerializedNote(noteId, user);
+    }
+
+    @GetMapping("")
+    public NotesBriefResponse list(@RequestParam Integer page, @RequestParam Integer size,
+                                   Principal principal) {
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+        return this.noteService.getNotesBrief(user, page, size);
     }
 
     @PutMapping("/{noteId}")

@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {apiDeleteNoteById, apiGetNoteFull, apiSaveNote, apiUpdateNote} from "../services/api.js";
+import {apiDeleteNoteById, apiGetNoteFull, apiGetNotes, apiSaveNote, apiUpdateNote} from "../services/api.js";
 
 export const useNoteStore = defineStore({
   id: "noteStore",
@@ -12,7 +12,10 @@ export const useNoteStore = defineStore({
     requestData: {
       loading: false,
       error: null
-    }
+    },
+    noteList: [],
+    page: 1,
+    size: 5
   }),
   actions: {
     async saveNote(content) {
@@ -54,6 +57,14 @@ export const useNoteStore = defineStore({
     },
     clearError() {
       this.requestData.error = null;
+    },
+    async fetchNotes() {
+      try {
+        const response = await apiGetNotes(this.page, this.size);
+        this.noteList = response.notes;
+      } catch (error) {
+        this.error = error;
+      }
     }
   }
 })

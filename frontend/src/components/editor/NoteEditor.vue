@@ -73,7 +73,12 @@ export default {
       }
       alert(this.error || "Saved");
     },
-    async delete() {
+    delete() {
+      if (confirm("Are you sure you want to delete this note?")) {
+        this.doDelete();
+      }
+    },
+    async doDelete() {
       await this.deleteActiveNote();
       if (!this.error) {
         this.$router.push({name: "Home"});

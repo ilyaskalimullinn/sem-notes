@@ -5,6 +5,8 @@ import org.example.ilyaskalimullinn.notes.data.entity.note.Note;
 import org.example.ilyaskalimullinn.notes.data.repository.NoteRepository;
 import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
+import org.example.ilyaskalimullinn.notes.data.response.NotesBriefResponse;
+import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteBriefSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteBlockSerializer;
@@ -15,6 +17,7 @@ import org.example.ilyaskalimullinn.notes.util.converter.NoteConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -95,6 +98,28 @@ public class NoteService {
                     .build();
         } catch (Exception e) {
             throw new NotePersistenceException("Something went wrong, could not delete note. Please, try again");
+        }
+    }
+
+    public NotesBriefResponse getNotesBrief(User user, Integer page, Integer size) {
+        // TODO !!!!! OPTIMIZE QUERIES!
+        try {
+
+            List<NoteBriefSerializer> notes = noteRepository.findByAuthorOrderByUpdatedAtAsc(user, PageRequest.of(page, size))
+                    .stream()
+                    .map(note -> NoteBriefSerializer.builder()
+                            .title(note.getTitle())
+                            .id(note.getId())
+                            .build())
+                    .toList();
+
+            return NotesBriefResponse.builder()
+                    .page(page)
+                    .size(size)
+                    .notes(notes)
+                    .build();
+        } catch (Exception e) {
+            throw new NotePersistenceException("Something went wrong, could not find notes. Please, try again");
         }
     }
 }

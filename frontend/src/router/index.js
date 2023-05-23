@@ -6,6 +6,7 @@ import LogoutView from "../views/LogoutView.vue";
 import {useUserStore} from "../stores/userStore.js";
 import NoteEditorView from "../views/NoteEditorView.vue";
 import NotFound404 from "../views/errors/NotFound404.vue";
+import NoteListView from "../views/NoteListView.vue";
 
 const routes = [
   {
@@ -39,8 +40,15 @@ const routes = [
   },
   {
     path: '/notes',
-    redirect: {name: 'Home'},
     children: [
+      {
+        path: "",
+        name: "NoteList",
+        component: NoteListView,
+        meta: {
+          requiresAuth: true
+        }
+      },
       {
         path: ':id',
         name: 'NoteEdit',

@@ -13,10 +13,13 @@
     </ul>
     <ul v-else>
       <li>
-        <router-link :to="{name: 'Logout'}">Logout</router-link>
+        <router-link :to="{name: 'NoteCreate'}">Create note</router-link>
       </li>
       <li>
-        <router-link :to="{name: 'NoteCreate'}">Create note</router-link>
+        <router-link :to="{name: 'NoteList'}">My notes</router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'Logout'}">Logout</router-link>
       </li>
     </ul>
   </BaseContainer>
