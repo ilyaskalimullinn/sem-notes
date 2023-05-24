@@ -3,33 +3,19 @@ package org.example.ilyaskalimullinn.notes.controller;
 import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
-import org.example.ilyaskalimullinn.notes.data.response.NotesBriefResponse;
-import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteContentSerializer;
-import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
+import org.example.ilyaskalimullinn.notes.data.response.NoteBriefResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
-import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteBlockSerializer;
-import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteParagraphBlockSerializer;
-import org.example.ilyaskalimullinn.notes.data.serializer.note.block.data.NoteParagraphBlockDataSerializer;
 import org.example.ilyaskalimullinn.notes.data.service.NoteService;
-import org.example.ilyaskalimullinn.notes.data.service.UserDetailsServiceImpl;
-import org.example.ilyaskalimullinn.notes.data.service.UserService;
 import org.example.ilyaskalimullinn.notes.exception.FieldsValidationException;
 import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.uri}/notes")
@@ -60,8 +46,8 @@ public class NoteController {
     }
 
     @GetMapping("")
-    public NotesBriefResponse list(@RequestParam Integer page, @RequestParam Integer size,
-                                   Principal principal) {
+    public NoteBriefResponse list(@RequestParam Integer page, @RequestParam Integer size,
+                                  Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         return this.noteService.getNotesBrief(user, page, size);
     }

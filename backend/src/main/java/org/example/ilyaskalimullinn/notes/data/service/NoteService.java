@@ -5,22 +5,19 @@ import org.example.ilyaskalimullinn.notes.data.entity.note.Note;
 import org.example.ilyaskalimullinn.notes.data.repository.NoteRepository;
 import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
-import org.example.ilyaskalimullinn.notes.data.response.NotesBriefResponse;
+import org.example.ilyaskalimullinn.notes.data.response.NoteBriefResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteBriefSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
-import org.example.ilyaskalimullinn.notes.data.serializer.note.block.NoteBlockSerializer;
 import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
 import org.example.ilyaskalimullinn.notes.exception.NotePersistenceException;
 import org.example.ilyaskalimullinn.notes.util.converter.NoteConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -101,7 +98,7 @@ public class NoteService {
         }
     }
 
-    public NotesBriefResponse getNotesBrief(User user, Integer page, Integer size) {
+    public NoteBriefResponse getNotesBrief(User user, Integer page, Integer size) {
         // TODO !!!!! OPTIMIZE QUERIES!
         try {
 
@@ -113,7 +110,7 @@ public class NoteService {
                             .build())
                     .toList();
 
-            return NotesBriefResponse.builder()
+            return NoteBriefResponse.builder()
                     .page(page)
                     .size(size)
                     .notes(notes)

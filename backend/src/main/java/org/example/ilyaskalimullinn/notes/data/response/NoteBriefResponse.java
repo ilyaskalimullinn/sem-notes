@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class NotesBriefResponse {
+public class NoteBriefResponse {
     private Integer page;
     private Integer size;
     private List<NoteBriefSerializer> notes;
