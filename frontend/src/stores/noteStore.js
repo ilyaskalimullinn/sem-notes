@@ -8,6 +8,7 @@ import {
   apiSaveNote, apiUpdateCategory,
   apiUpdateNote
 } from "../services/api.js";
+import {getCategoriesFromStorage, storeCategoriesInStorage} from "../services/localData.js";
 
 export const useNoteStore = defineStore({
   id: "noteStore",
@@ -15,7 +16,8 @@ export const useNoteStore = defineStore({
     activeNote: {
       id: null,
       content: null,
-      title: null
+      title: null,
+      categoryIds: null
     },
     requestData: {
       loading: false,
@@ -29,6 +31,7 @@ export const useNoteStore = defineStore({
   }),
   actions: {
     async saveNote(content) {
+      this.loading = true;
       this.activeNote.content = content;
       this.clearError();
       if (this.activeNote.id === null) {
@@ -37,12 +40,16 @@ export const useNoteStore = defineStore({
           this.activeNote.id = response.note.id;
         } catch(error) {
           this.requestData.error = error
+        } finally {
+          this.loading = false;
         }
       } else {
         try {
           const response = await apiUpdateNote(this.activeNote);
         } catch(error) {
           this.requestData.error = error
+        } finally {
+          this.loading = false;
         }
       }
     },
@@ -50,65 +57,98 @@ export const useNoteStore = defineStore({
       return await this.deleteNoteById(this.activeNote.id);
     },
     async deleteNoteById(id) {
+      this.loading = true;
       this.clearError();
       try {
         const response = await apiDeleteNoteById(id);
       } catch (error) {
         this.requestData.error = error;
+      } finally {
+        this.loading = false;
       }
     },
     async fetchActiveNoteById(id) {
+      this.loading = true;
       try {
         this.activeNote = await apiGetNoteFull(id);
         console.log(this.activeNote);
       } catch(error) {
         this.requestData.error = error
+      } finally {
+        this.loading = false;
       }
     },
     clearError() {
       this.requestData.error = null;
     },
     async fetchNotes() {
+      this.loading = true;
       try {
         const response = await apiGetNotes(this.page, this.size);
         this.noteList = response.notes;
       } catch (error) {
         this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
     async fetchCategories() {
+      this.loading = true;
       try {
         const response = await apiGetCategories();
         this.categoryList = response.categories;
+
+        storeCategoriesInStorage(this.categoryList);
       } catch (error) {
         this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
     async saveCategory(category) {
+      this.loading = true;
       try {
         const response = await apiSaveCategory(category);
-        category = response.data.category;
+        category = response.category;
         this.categoryList.push(category);
+        storeCategoriesInStorage(this.categoryList);
       } catch (error) {
         this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
     async updateCategoryById(newCategory) {
+      this.loading = true;
       try {
         const response = await apiUpdateCategory(newCategory);
         let ind = this.categoryList.findIndex(cat => cat.id === newCategory.id);
         this.categoryList[ind] = newCategory;
+        storeCategoriesInStorage(this.categoryList);
       } catch (error) {
         this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
     async deleteCategoryById(category) {
+      this.loading = true;
       try {
         const response = await apiDeleteCategory(category);
         this.categoryList = this.categoryList.filter(c => c.id !== category.id);
+        storeCategoriesInStorage(this.categoryList);
       } catch (error) {
         this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
+    async loadCategories() {
+      this.categoryList = getCategoriesFromStorage();
+      if (this.categoryList === null) {
+        await this.fetchCategories();
+      }
+      return this.categoryList
+    }
   }
 })

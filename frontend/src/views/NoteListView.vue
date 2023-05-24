@@ -1,5 +1,6 @@
 <template>
-  <MainLayout>
+  <Loader v-if="this.loading" />
+  <MainLayout v-else>
     <h2 class="mb-5">My Notes</h2>
     <SearchForm></SearchForm>
     <NoteList></NoteList>
@@ -9,15 +10,19 @@
 
 <script>
 import NoteList from "../components/NoteList.vue";
-import {mapActions, mapWritableState} from "pinia";
+import {mapActions, mapState, mapWritableState} from "pinia";
 import {useNoteStore} from "../stores/noteStore.js";
 import MainLayout from "../components/blocks/MainLayout.vue";
 import SearchForm from "../components/forms/SearchForm.vue";
+import Loader from "../components/Loader.vue";
 
 export default {
   name: "NoteListView",
-  components: {SearchForm, MainLayout, NoteList},
+  components: {Loader, SearchForm, MainLayout, NoteList},
   computed: {
+    ...mapState(useNoteStore, {
+      loading: state => state.requestData.loading
+    }),
     ...mapWritableState(useNoteStore, {
       page: "page",
       size: "size",
@@ -27,9 +32,9 @@ export default {
   methods: {
     ...mapActions(useNoteStore, ["fetchNotes", "fetchCategories"])
   },
-  async mounted() {
-    await this.fetchNotes();
-    await this.fetchCategories();
+  created() {
+    this.fetchNotes();
+    this.fetchCategories();
   }
 }
 </script>

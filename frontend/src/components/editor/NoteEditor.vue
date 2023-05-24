@@ -3,6 +3,7 @@
   <div id="editorjs"></div>
   <button @click="submit">Save</button>
   <button @click="this.delete">Delete</button>
+  <CategoryList :active-category-id-list="activeNote.categoryIds" @update-active-id-list="updateActiveNoteCategories" />
   <div class="error" v-if="this.error">{{error.message}}</div>
 </template>
 
@@ -15,8 +16,10 @@ import Quote from "@editorjs/quote";
 import CodeTool from "@editorjs/code";
 import {mapActions, mapState, mapWritableState} from "pinia";
 import {useNoteStore} from "../../stores/noteStore.js";
+import CategoryList from "../CategoryList.vue";
 
 export default {
+  components: {CategoryList},
   data() {
     return {
       editor: new EditorJS({
@@ -82,6 +85,9 @@ export default {
       if (!this.error) {
         this.$router.push({name: "NoteList"});
       }
+    },
+    updateActiveNoteCategories(newCategoryList) {
+      this.activeNote.categoryIds = newCategoryList;
     }
   },
   name: "NoteEditor"

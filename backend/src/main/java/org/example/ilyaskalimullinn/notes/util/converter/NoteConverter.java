@@ -1,14 +1,19 @@
 package org.example.ilyaskalimullinn.notes.util.converter;
 
+import org.example.ilyaskalimullinn.notes.data.entity.note.Category;
 import org.example.ilyaskalimullinn.notes.data.entity.note.Note;
 import org.example.ilyaskalimullinn.notes.data.entity.note.blocks.*;
 import org.example.ilyaskalimullinn.notes.data.entity.note.blocks.subblocks.NoteChecklistBlockItem;
 import org.example.ilyaskalimullinn.notes.data.entity.note.blocks.subblocks.NoteListBlockItem;
+import org.example.ilyaskalimullinn.notes.data.repository.CategoryRepository;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteContentSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.*;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.block.data.*;
+import org.example.ilyaskalimullinn.notes.data.service.CategoryService;
+import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
 import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
@@ -26,6 +31,8 @@ import java.util.stream.Collectors;
 @Component
 public class NoteConverter implements GenericConverter {
     protected Set<ConvertiblePair> convertiblePairs;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     protected final String CONVERTER_METHOD_FORMAT = "convert%sTo%s";
 
@@ -76,9 +83,15 @@ public class NoteConverter implements GenericConverter {
 
     protected Note convertNoteSerializerToNote(NoteSerializer noteSerializer) throws NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
+        List<Category> categories = noteSerializer.getCategoryIds().stream().map(id ->
+            categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("No category with this id"))
+        ).collect(Collectors.toList());
+        // todo check if these categories belong to the user
+
         Note note = Note.builder()
                 .title(noteSerializer.getTitle())
                 .editorVersion(noteSerializer.getContent().getVersion())
+                .categories(categories)
                 .id(noteSerializer.getId())
                 .build();
 
@@ -204,6 +217,7 @@ public class NoteConverter implements GenericConverter {
                 .title(note.getTitle())
                 .content(contentSerializer)
                 .id(note.getId())
+                .categoryIds(note.getCategories().stream().map(Category::getId).toList())
                 .build();
     }
 

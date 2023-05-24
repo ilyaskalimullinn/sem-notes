@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,4 +17,6 @@ public class NoteSerializer {
     private String title;
     @NotNull
     private NoteContentSerializer content;
+    @NotNull // but might be empty
+    private List<Long> categoryIds;
 }

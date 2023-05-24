@@ -1,6 +1,7 @@
 package org.example.ilyaskalimullinn.notes.data.service;
 
 import org.example.ilyaskalimullinn.notes.data.entity.User;
+import org.example.ilyaskalimullinn.notes.data.entity.note.Category;
 import org.example.ilyaskalimullinn.notes.data.entity.note.Note;
 import org.example.ilyaskalimullinn.notes.data.repository.NoteRepository;
 import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
@@ -13,8 +14,11 @@ import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
 import org.example.ilyaskalimullinn.notes.exception.EntityPersistenceException;
 import org.example.ilyaskalimullinn.notes.util.converter.NoteConverter;
+import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -29,22 +33,7 @@ public class NoteService {
     private NoteRepository noteRepository;
 
     public NoteEditResponse saveNote(NoteSerializer noteSerializer, User user) {
-        try {
-            Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
-                    TypeDescriptor.valueOf(Note.class));
-
-            note.setAuthor(user);
-
-            noteRepository.save(note);
-
-            return NoteEditResponse.builder()
-                    .detail("Created")
-                    .note(new NoteEditSerializer(note))
-                    .build();
-        } catch (Exception e) {
-            throw new EntityPersistenceException("Something went wrong, could not save note. Please, try again");
-        }
-
+        return persistNote(noteSerializer, user, "Created");
     }
 
     public Note getNote(Long noteId, User user) {
@@ -64,23 +53,7 @@ public class NoteService {
     }
 
     public NoteEditResponse updateNote(NoteSerializer noteSerializer, User user) {
-        if (!noteRepository.existsByIdAndAuthor(noteSerializer.getId(), user)) {
-            throw new NotFoundException("Can't find a note");
-        }
-        try {
-            Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
-                    TypeDescriptor.valueOf(Note.class));
-            note.setAuthor(user);
-
-            noteRepository.save(note);
-
-            return NoteEditResponse.builder()
-                    .detail("Updated")
-                    .note(new NoteEditSerializer(note))
-                    .build();
-        } catch (Exception e) {
-            throw new EntityPersistenceException("Something went wrong, could not update note. Please, try again");
-        }
+        return persistNote(noteSerializer, user, "Updated");
     }
 
     public NoteDeleteResponse deleteNoteById(Long noteId, User user) {
@@ -106,6 +79,7 @@ public class NoteService {
                     .map(note -> NoteBriefSerializer.builder()
                             .title(note.getTitle())
                             .id(note.getId())
+                            .categoryIds(note.getCategories().stream().map(Category::getId).toList())
                             .build())
                     .toList();
 
@@ -116,6 +90,29 @@ public class NoteService {
                     .build();
         } catch (Exception e) {
             throw new EntityPersistenceException("Something went wrong, could not find notes. Please, try again");
+        }
+    }
+
+    protected NoteEditResponse persistNote(NoteSerializer noteSerializer, User user, String successDetail) {
+        if (!noteRepository.existsByIdAndAuthor(noteSerializer.getId(), user)) {
+            throw new NotFoundException("Can't find a note");
+        }
+        try {
+            Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
+                    TypeDescriptor.valueOf(Note.class));
+            note.setAuthor(user);
+            if (note.getCategories().stream().anyMatch(category -> !category.getAuthor().equals(user))) {
+                throw new NotFoundException("Can't find a category with this id");
+            }
+
+            noteRepository.save(note);
+
+            return NoteEditResponse.builder()
+                    .detail(successDetail)
+                    .note(new NoteEditSerializer(note))
+                    .build();
+        } catch (ConversionNotSupportedException | ConversionFailedException | DataAccessException e) {
+            throw new EntityPersistenceException("Something went wrong, could not update note. Please, try again");
         }
     }
 }
