@@ -18,6 +18,7 @@ export default {
   computed: {
     ...mapState(useNoteStore, {
       error: store => store.requestData.error,
+      activeNote: "activeNote"
     })
   },
   data() {
@@ -30,13 +31,12 @@ export default {
   },
   async created() {
     this.loading = true;
-    if (this.$route.params.id) {
-      await this.fetchActiveNoteById(this.$route.params.id);
-      if (this.error && this.error.statusCode && this.error.statusCode === 404) {
-        this.$router.push({name: "NotFound404"});
-      }
-      await this.loadCategories();
-    }
+    await this.loadCategories();
+    await this.fetchActiveNoteById(this.$route.params.id);
+    if (this.error && this.error.statusCode && this.error.statusCode === 404) {
+      this.$router.push({name: "NotFound404"});
+      return;
+  }
     this.loading = false;
   }
 }

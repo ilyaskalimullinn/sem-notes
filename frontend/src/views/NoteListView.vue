@@ -19,10 +19,12 @@ import Loader from "../components/Loader.vue";
 export default {
   name: "NoteListView",
   components: {Loader, SearchForm, MainLayout, NoteList},
+  data() {
+    return {
+      loading: true
+    }
+  },
   computed: {
-    ...mapState(useNoteStore, {
-      loading: state => state.requestData.loading
-    }),
     ...mapWritableState(useNoteStore, {
       page: "page",
       size: "size",
@@ -32,9 +34,11 @@ export default {
   methods: {
     ...mapActions(useNoteStore, ["fetchNotes", "fetchCategories"])
   },
-  created() {
-    this.fetchNotes();
-    this.fetchCategories();
+  async created() {
+    this.loading = true;
+    await this.fetchNotes();
+    await this.fetchCategories();
+    this.loading = false;
   }
 }
 </script>

@@ -7,6 +7,8 @@ import {useUserStore} from "../stores/userStore.js";
 import NoteEditorView from "../views/NoteEditorView.vue";
 import NotFound404 from "../views/errors/NotFound404.vue";
 import NoteListView from "../views/NoteListView.vue";
+import {useNoteStore} from "../stores/noteStore.js";
+import NoteCreateView from "../views/NoteCreateView.vue";
 
 const routes = [
   {
@@ -60,7 +62,7 @@ const routes = [
       {
         path: 'new',
         name: 'NoteCreate',
-        component: NoteEditorView,
+        component: NoteCreateView,
         meta: {
           requiresAuth: true
         },
@@ -90,6 +92,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
+  useNoteStore().$reset();
+
   const logged = useUserStore().isAuthenticated;
   const authRequired = to.meta["requiresAuth"] || false
   const guestRequired = to.meta["requiresGuest"] || false

@@ -16,8 +16,8 @@ export const useNoteStore = defineStore({
     activeNote: {
       id: null,
       content: null,
-      title: null,
-      categoryIds: null
+      title: "",
+      categoryIds: []
     },
     requestData: {
       loading: false,
@@ -149,6 +149,12 @@ export const useNoteStore = defineStore({
         await this.fetchCategories();
       }
       return this.categoryList
+    },
+    clearActiveNote() {
+      this.activeNote.id = null;
+      this.activeNote.content = null;
+      this.activeNote.title = "";
+      this.activeNote.categoryIds = [];
     }
   }
 })

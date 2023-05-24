@@ -57,19 +57,29 @@ export default {
       activeNote: "activeNote"
     })
   },
+  created() {
+    if (this.activeNote !== null && this.activeNote.content !== null) {
+      this.editor.isReady.then(() => {
+        this.editor.render(this.activeNote.content);
+      })
+    }
+  },
   watch: {
     activeNote(newValue, oldValue) {
-      if (newValue) {
+      if (newValue && newValue.content) {
         this.editor.isReady.then(() => {
           this.editor.render(newValue.content);
         })
+      } else {
+        this.editor.clear();
       }
     }
   },
   methods: {
     ...mapActions(useNoteStore, ["saveNote", "deleteActiveNote"]),
     async submit() {
-      await this.saveNote(await this.editor.save());
+      const content = await this.editor.save();
+      await this.saveNote(content);
       alert(this.error || "Saved");
       if (!this.error && !this.$route.params.id) {
         this.$router.push({name: "NoteEdit", params: {id: this.activeNote.id}})

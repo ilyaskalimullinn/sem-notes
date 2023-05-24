@@ -37,7 +37,7 @@ public class Note {
     @Column(nullable = false)
     private String editorVersion;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "note", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "order_num")
     @ToString.Exclude
     private List<NoteBlock> blocks = new ArrayList<>();
