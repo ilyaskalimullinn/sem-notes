@@ -64,6 +64,9 @@ public class NoteService {
     }
 
     public NoteEditResponse updateNote(NoteSerializer noteSerializer, User user) {
+        if (!noteRepository.existsByIdAndAuthor(noteSerializer.getId(), user)) {
+            throw new NotFoundException("Can't find a note");
+        }
         try {
             Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
                     TypeDescriptor.valueOf(Note.class));

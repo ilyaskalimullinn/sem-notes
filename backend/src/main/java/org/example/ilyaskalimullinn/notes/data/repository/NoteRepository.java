@@ -11,6 +11,7 @@ import java.util.List;
 
 @Repository
 public interface NoteRepository extends CrudRepository<Note, Long> {
+    boolean existsByIdAndAuthor(Long id, User author);
     List<Note> findByAuthorOrderByUpdatedAtAsc(User author, Pageable pageable);
     Note findByIdAndAuthor(Long id, User author);
 
