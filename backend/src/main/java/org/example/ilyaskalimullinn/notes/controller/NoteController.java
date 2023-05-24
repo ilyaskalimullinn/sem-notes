@@ -34,6 +34,9 @@ public class NoteController {
         if (result.hasErrors()) {
             throw new FieldsValidationException("Errors in note request", result.getFieldErrors());
         }
+        if (noteSerializer.getId() != null) {
+            throw new InvalidRequestException("Bad request, new note already has an ID");
+        }
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         return noteService.saveNote(noteSerializer, user);
     }

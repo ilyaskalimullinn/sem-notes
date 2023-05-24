@@ -33,10 +33,6 @@ public class NoteService {
             Note note = (Note) noteConverter.convert(noteSerializer, TypeDescriptor.valueOf(noteSerializer.getClass()),
                     TypeDescriptor.valueOf(Note.class));
 
-            if (note.getId() != null) {
-                throw new InvalidRequestException("Bad request, new note already has an ID");
-            }
-
             note.setAuthor(user);
 
             noteRepository.save(note);
