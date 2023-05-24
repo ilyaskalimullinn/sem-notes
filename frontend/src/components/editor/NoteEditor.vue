@@ -67,11 +67,10 @@ export default {
     ...mapActions(useNoteStore, ["saveNote", "deleteActiveNote"]),
     async submit() {
       await this.saveNote(await this.editor.save());
+      alert(this.error || "Saved");
       if (!this.error && !this.$route.params.id) {
         this.$router.push({name: "NoteEdit", params: {id: this.activeNote.id}})
-        return;
       }
-      alert(this.error || "Saved");
     },
     delete() {
       if (confirm("Are you sure you want to delete this note?")) {

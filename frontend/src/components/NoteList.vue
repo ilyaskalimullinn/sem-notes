@@ -1,11 +1,11 @@
 <template>
-  <ul>
-    <li v-for="note in this.noteList" :key="note.id">
+  <div v-for="note in this.noteList" :key="note.id" class="border-1 border p-3 mb-2 mt-2 d-flex">
+    <h3>
       <router-link :to="{name: 'NoteEdit', params: {id: note.id}}">
         {{note.title}}
       </router-link>
-    </li>
-  </ul>
+    </h3>
+  </div>
 </template>
 
 <script>

@@ -1,6 +1,7 @@
 <template>
   <MainLayout>
-    <CategoryList></CategoryList>
+    <h2 class="mb-5">My Notes</h2>
+    <SearchForm></SearchForm>
     <NoteList></NoteList>
     <div class="error" v-if="this.error">{{this.error}}</div>
   </MainLayout>
@@ -10,12 +11,12 @@
 import NoteList from "../components/NoteList.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {useNoteStore} from "../stores/noteStore.js";
-import CategoryList from "../components/CategoryList.vue";
 import MainLayout from "../components/blocks/MainLayout.vue";
+import SearchForm from "../components/forms/SearchForm.vue";
 
 export default {
   name: "NoteListView",
-  components: {MainLayout, CategoryList, NoteList},
+  components: {SearchForm, MainLayout, NoteList},
   computed: {
     ...mapWritableState(useNoteStore, {
       page: "page",

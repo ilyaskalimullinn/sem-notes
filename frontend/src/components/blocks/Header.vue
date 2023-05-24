@@ -1,8 +1,10 @@
 <template>
   <header class="d-flex flex-wrap justify-content-center border-bottom p-3">
-    <router-link class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none" :to="{name: 'Home'}">
-      Home
-    </router-link>
+    <h3 class="d-flex align-items-center mb-md-0 me-md-auto ">
+      <router-link class="text-dark text-decoration-none" :to="{name: 'Home'}">
+        Home
+      </router-link>
+    </h3>
     <ul class="nav nav-pills d-flex">
       <li class="nav-item">
         <router-link v-for="route in this.getRoutes"
@@ -33,6 +35,11 @@ export default {
         {
           name: "NoteList",
           text: "My Notes",
+          authRequired: true
+        },
+        {
+          name: "NoteCreate",
+          text: "Create Note",
           authRequired: true
         },
         {

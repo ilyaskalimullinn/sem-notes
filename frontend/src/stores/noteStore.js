@@ -23,6 +23,7 @@ export const useNoteStore = defineStore({
     },
     noteList: [],
     categoryList: [],
+    activeCategoryList: [],
     page: 0,
     size: 5
   }),
