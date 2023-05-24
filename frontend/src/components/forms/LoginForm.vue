@@ -1,11 +1,11 @@
 <template>
-  <BaseAuthForm @submit.prevent="this.submit" :title="title" :error="this.error">
+  <BaseAuthForm @submit.prevent="this.submit" :error="this.error" title="Sign in">
     <template v-slot:fields>
       <FormField name="email" v-model="this.form.email" :errors="v$.form.email.$errors" label="Email" type="email" required/>
       <FormField name="password" v-model="this.form.password" :errors="v$.form.password.$errors" label="Password" type="password" required/>
     </template>
     <template v-slot:submit-button>
-      <input type="submit" value="Sign in"/>
+      <FormSubmit value="Sign in"/>
     </template>
     <template v-slot:links>
       <router-link :to="{name: 'Register'}">
@@ -22,11 +22,12 @@ import useVuelidate from "@vuelidate/core";
 import {email, maxLength, minLength, required, helpers} from "@vuelidate/validators";
 import {useUserStore} from "../../stores/userStore.js";
 import {mapActions, mapState} from "pinia";
+import FormSubmit from "./FormSubmit.vue";
 
 
 export default {
   name: "LoginForm",
-  components: {FormField, BaseAuthForm},
+  components: {FormSubmit, FormField, BaseAuthForm},
   setup () {
     return {
       v$: useVuelidate()
@@ -34,7 +35,6 @@ export default {
   },
   data() {
     return {
-      title: "Login",
       form: {
         email: "",
         password: ""

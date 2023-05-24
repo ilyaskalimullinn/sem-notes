@@ -1,8 +1,8 @@
 <template>
-  <div class="container h-100 d-flex flex-column">
+  <div class="container min-vh-100 d-flex flex-column">
 
     <Header />
-    <main class="mt-5 mb-5">
+    <main class="mt-5 mb-5 flex-grow-1 d-flex flex-column">
       <slot>
 
       </slot>

@@ -1,7 +1,7 @@
 <template>
-  <div class="form-field">
-    <label :for="id">{{label}}</label>
-    <input @input="this.$emit('update:modelValue', $event.target.value)"
+  <div class="form-floating mb-3">
+    <input :class="getClass"
+          @input="this.$emit('update:modelValue', $event.target.value)"
            :name="name"
            :type="type"
            :id="id"
@@ -9,11 +9,7 @@
            :placeholder="placeholder"
            :required="required"
     />
-    <div class="form-errors">
-      <div v-for="error in errors" :key="error" class="form-error">
-        {{ error.$message }}
-      </div>
-    </div>
+    <label :for="id">{{getMessage}}</label>
   </div>
 </template>
 
@@ -54,12 +50,24 @@ export default {
       type: Array,
       default: []
     }
+  },
+  computed: {
+    getClass() {
+      let res = "form-control ";
+      if (this.errors[0]) {
+        res += "is-invalid"
+      }
+      return res;
+    },
+    getMessage() {
+      if (this.errors[0]) {
+        return this.errors[0].$message;
+      }
+      return this.label;
+    }
   }
 }
 </script>
 
 <style scoped>
-.form-error {
-    color: red;
-}
 </style>

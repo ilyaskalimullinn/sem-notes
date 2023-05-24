@@ -1,9 +1,8 @@
 <template>
   <MainLayout>
-    <h1>Sign in</h1>
-    <br />
-    <LoginForm />
-    <router-link :to="{name: 'Home'}">Main page</router-link>
+    <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+      <LoginForm />
+    </div>
   </MainLayout>
 </template>
 

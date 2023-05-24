@@ -1,5 +1,5 @@
 <template>
-  <BaseAuthForm @submit.prevent="this.submit" :title="title" :error="this.error">
+  <BaseAuthForm @submit.prevent="this.submit" :error="this.error" title="Sign up">
     <template v-slot:fields>
       <FormField name="email"
                  v-model="this.form.email"
@@ -29,7 +29,7 @@
                  required/>
     </template>
     <template v-slot:submit-button>
-      <input type="submit" value="Sign in"/>
+      <FormSubmit value="Sign up"/>
     </template>
     <template v-slot:links>
       <router-link :to="{name: 'Login'}">
@@ -46,10 +46,11 @@ import useVuelidate from "@vuelidate/core";
 import {email, helpers, maxLength, minLength, required} from "@vuelidate/validators";
 import {useUserStore} from "../../stores/userStore.js";
 import {mapActions, mapState} from "pinia";
+import FormSubmit from "./FormSubmit.vue";
 
 export default {
   name: "RegistrationForm",
-  components: {FormField, BaseAuthForm},
+  components: {FormSubmit, FormField, BaseAuthForm},
   setup() {
     return {
       v$: useVuelidate(),
@@ -57,7 +58,6 @@ export default {
   },
   data() {
     return {
-      title: "Register",
       form: {
         email: "",
         fullName: "",

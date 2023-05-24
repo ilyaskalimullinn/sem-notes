@@ -1,6 +1,9 @@
 <template>
-  <form @submit.prevent="this.$emit('submit.prevent')" method="post">
-    <div class="form-title">{{title}}</div>
+  <form @submit.prevent="this.$emit('submit.prevent')"
+        method="post"
+        novalidate
+        class="d-flex flex-column justify-content-center align-items-center">
+    <h3>{{this.title}}</h3>
     <div class="fields-row">
       <slot name="fields">
 
@@ -11,7 +14,7 @@
 
     </slot>
 
-    <div class="links-row">
+    <div class="links-row mt-3">
       <slot name="links">
 
       </slot>
@@ -28,7 +31,7 @@
 
 export default {
   name: "BaseAuthForm",
-  props: ["title", "error"]
+  props: ["error", "title"]
 }
 </script>
 
