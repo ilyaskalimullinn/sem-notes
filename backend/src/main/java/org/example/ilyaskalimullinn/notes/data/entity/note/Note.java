@@ -42,6 +42,14 @@ public class Note {
     @ToString.Exclude
     private List<NoteBlock> blocks = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "note_category",
+        joinColumns = @JoinColumn(name = "note", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "category", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private List<Category> categories = new ArrayList<>();
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
