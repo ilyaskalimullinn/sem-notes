@@ -8,6 +8,7 @@ import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
 import org.example.ilyaskalimullinn.notes.exception.EntityPersistenceException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -53,5 +54,11 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public GenericErrorResponse handleNotFoundException(NotFoundException e) {
         return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
+    }
+
+    @ExceptionHandler(HttpMessageConversionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public GenericErrorResponse handleHttpMessageConversionException(HttpMessageConversionException e) {
+        return GenericErrorResponse.builder().detail("Invalid request, please try again later").build();
     }
 }
