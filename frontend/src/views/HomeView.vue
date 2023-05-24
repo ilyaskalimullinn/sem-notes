@@ -1,5 +1,5 @@
 <template>
-  <BaseContainer>
+  <MainLayout>
     <h1>Welcome to Notes
     <span v-if="this.isAuthenticated">, {{user.fullName}}</span>
     </h1>
@@ -22,17 +22,18 @@
         <router-link :to="{name: 'Logout'}">Logout</router-link>
       </li>
     </ul>
-  </BaseContainer>
+  </MainLayout>
 </template>
 
 <script>
 import BaseContainer from "../containers/BaseContainer.vue";
 import {useUserStore} from "../stores/userStore.js";
 import {mapGetters, mapState} from "pinia";
+import MainLayout from "../components/blocks/MainLayout.vue";
 
 export default {
   name: "HomeView",
-  components: {BaseContainer},
+  components: {MainLayout, BaseContainer},
   computed: {
     ...mapState(useUserStore, ["user", "isAuthenticated"])
   }

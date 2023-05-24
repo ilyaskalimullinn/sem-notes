@@ -1,8 +1,7 @@
 <template>
-  <router-view />
-  <BaseContainer>
+  <MainLayout>
     <NoteEditor></NoteEditor>
-  </BaseContainer>
+  </MainLayout>
 </template>
 
 <script>
@@ -10,9 +9,10 @@ import NoteEditor from "../components/editor/NoteEditor.vue";
 import BaseContainer from "../containers/BaseContainer.vue";
 import {useNoteStore} from "../stores/noteStore.js";
 import {mapActions, mapState} from "pinia";
+import MainLayout from "../components/blocks/MainLayout.vue";
 export default {
   name: "NoteEditorView",
-  components: {NoteEditor, BaseContainer},
+  components: {MainLayout, NoteEditor, BaseContainer},
   computed: {
     ...mapState(useNoteStore, {
       error: store => store.requestData.error,

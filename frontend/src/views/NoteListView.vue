@@ -1,8 +1,9 @@
 <template>
-  <router-link :to="{name: 'Home'}">Home</router-link>
-  <CategoryList></CategoryList>
-  <NoteList></NoteList>
-  <div class="error" v-if="this.error">{{this.error}}</div>
+  <MainLayout>
+    <CategoryList></CategoryList>
+    <NoteList></NoteList>
+    <div class="error" v-if="this.error">{{this.error}}</div>
+  </MainLayout>
 </template>
 
 <script>
@@ -10,10 +11,11 @@ import NoteList from "../components/NoteList.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {useNoteStore} from "../stores/noteStore.js";
 import CategoryList from "../components/CategoryList.vue";
+import MainLayout from "../components/blocks/MainLayout.vue";
 
 export default {
   name: "NoteListView",
-  components: {CategoryList, NoteList},
+  components: {MainLayout, CategoryList, NoteList},
   computed: {
     ...mapWritableState(useNoteStore, {
       page: "page",
