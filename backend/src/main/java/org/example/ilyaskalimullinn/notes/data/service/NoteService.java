@@ -11,7 +11,7 @@ import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerialize
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
 import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
-import org.example.ilyaskalimullinn.notes.exception.NotePersistenceException;
+import org.example.ilyaskalimullinn.notes.exception.EntityPersistenceException;
 import org.example.ilyaskalimullinn.notes.util.converter.NoteConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
@@ -46,7 +46,7 @@ public class NoteService {
                     .note(new NoteEditSerializer(note))
                     .build();
         } catch (Exception e) {
-            throw new NotePersistenceException("Something went wrong, could not save note. Please, try again");
+            throw new EntityPersistenceException("Something went wrong, could not save note. Please, try again");
         }
 
     }
@@ -80,7 +80,7 @@ public class NoteService {
                     .note(new NoteEditSerializer(note))
                     .build();
         } catch (Exception e) {
-            throw new NotePersistenceException("Something went wrong, could not update note. Please, try again");
+            throw new EntityPersistenceException("Something went wrong, could not update note. Please, try again");
         }
     }
 
@@ -94,7 +94,7 @@ public class NoteService {
                     .id(noteId)
                     .build();
         } catch (Exception e) {
-            throw new NotePersistenceException("Something went wrong, could not delete note. Please, try again");
+            throw new EntityPersistenceException("Something went wrong, could not delete note. Please, try again");
         }
     }
 
@@ -116,7 +116,7 @@ public class NoteService {
                     .notes(notes)
                     .build();
         } catch (Exception e) {
-            throw new NotePersistenceException("Something went wrong, could not find notes. Please, try again");
+            throw new EntityPersistenceException("Something went wrong, could not find notes. Please, try again");
         }
     }
 }
