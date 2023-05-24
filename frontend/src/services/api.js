@@ -97,3 +97,36 @@ export async function apiGetNotes(page, size) {
 
   return response.data;
 }
+
+export async function apiGetCategories() {
+  const response = await instance.get(`/category`)
+    .catch(defaultApiExceptionHandler);
+
+  return response.data;
+}
+
+export async function apiSaveCategory(category) {
+  const response = await instance.post(`/category`, {
+    category
+  })
+    .catch(defaultApiExceptionHandler);
+
+  return response.data;
+}
+
+export async function apiUpdateCategory(category) {
+  const response = await instance.post(`/category/${category.id}`, {
+    category
+  })
+    .catch(defaultApiExceptionHandler);
+
+  return response.data;
+}
+
+export async function apiDeleteCategory(id) {
+  const response = await instance.delete(`/category/${id}`)
+    .catch(defaultApiExceptionHandler);
+
+  return response.data;
+}
+
