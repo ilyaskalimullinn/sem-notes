@@ -18,3 +18,5 @@ security.jwt.secret-key=
 security.jwt.expiration=3600000
 
 dictionary.api.url=https://api.dictionaryapi.dev/api/v2/entries/en
+
+logging.level.root=INFO
