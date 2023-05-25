@@ -22,7 +22,6 @@ public class NoteRepositoryJpa {
         CriteriaQuery<Note> criteriaQuery = criteriaBuilder.createQuery(Note.class);
         Root<Note> noteRoot = criteriaQuery.from(Note.class);
 
-        noteRoot.join("categories", JoinType.LEFT);
         noteRoot.fetch("categories", JoinType.LEFT);
 
         criteriaQuery.select(noteRoot)
@@ -34,5 +33,24 @@ public class NoteRepositoryJpa {
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
+    }
+
+    public Note findByIdAndAuthor(Long id, User author) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Note> criteriaQuery = criteriaBuilder.createQuery(Note.class);
+        Root<Note> noteRoot = criteriaQuery.from(Note.class);
+
+        criteriaQuery.select(noteRoot)
+                .where(criteriaBuilder.and(
+                        criteriaBuilder.equal(noteRoot.get("id"), id),
+                        criteriaBuilder.equal(noteRoot.get("author"), author)
+                ))
+                .orderBy(criteriaBuilder.desc(noteRoot.get("updatedAt")));
+
+        noteRoot.fetch("categories", JoinType.LEFT);
+        noteRoot.fetch("blocks", JoinType.LEFT);
+
+        return em.createQuery(criteriaQuery)
+                .getSingleResult();
     }
 }

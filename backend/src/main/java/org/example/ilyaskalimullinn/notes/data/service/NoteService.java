@@ -56,12 +56,8 @@ public class NoteService {
         }
     }
 
-    public Note getNote(Long noteId, User user) {
-        return noteRepository.findByIdAndAuthor(noteId, user);
-    }
-
     public NoteSerializer getSerializedNote(Long noteId, User user) {
-        Note note = noteRepository.findByIdAndAuthor(noteId, user);
+        Note note = noteRepositoryJpa.findByIdAndAuthor(noteId, user);
 
         if (note == null) {
             throw new NotFoundException("Note not found");

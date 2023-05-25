@@ -18,8 +18,6 @@ public interface NoteRepository extends CrudRepository<Note, Long> {
     List<Note> findByCategoriesIn(Collection<Category> categories);
     boolean existsByIdAndAuthor(Long id, User author);
 
-    Note findByIdAndAuthor(Long id, User author);
-
     @Transactional
     long deleteByIdAndAuthor(Long id, User author);
 
