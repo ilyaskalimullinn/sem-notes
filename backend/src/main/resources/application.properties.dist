@@ -13,3 +13,5 @@ api.uri=/api/v1
 # generate 256-bit encryption key
 security.jwt.secret-key=
 security.jwt.expiration=3600000
+
+dictionary.api.url=https://api.dictionaryapi.dev/api/v2/entries/en

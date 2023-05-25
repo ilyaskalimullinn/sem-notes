@@ -2,10 +2,7 @@ package org.example.ilyaskalimullinn.notes.controller;
 
 import org.example.ilyaskalimullinn.notes.data.response.FieldsValidationErrorResponse;
 import org.example.ilyaskalimullinn.notes.data.response.GenericErrorResponse;
-import org.example.ilyaskalimullinn.notes.exception.FieldsValidationException;
-import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
-import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
-import org.example.ilyaskalimullinn.notes.exception.EntityPersistenceException;
+import org.example.ilyaskalimullinn.notes.exception.*;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
@@ -60,5 +57,11 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public GenericErrorResponse handleHttpMessageConversionException(HttpMessageConversionException e) {
         return GenericErrorResponse.builder().detail("Invalid request, please try again later").build();
+    }
+
+    @ExceptionHandler(DictionaryApiException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public GenericErrorResponse handleDictionaryApiException(DictionaryApiException e) {
+        return GenericErrorResponse.builder().detail(e.getLocalizedMessage()).build();
     }
 }
