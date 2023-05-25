@@ -4,13 +4,13 @@ import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.entity.note.Category;
 import org.example.ilyaskalimullinn.notes.data.entity.note.Note;
 import org.example.ilyaskalimullinn.notes.data.repository.NoteRepository;
+import org.example.ilyaskalimullinn.notes.data.repository.NoteRepositoryJpa;
 import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteBriefResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteBriefSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteEditSerializer;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.NoteSerializer;
-import org.example.ilyaskalimullinn.notes.exception.InvalidRequestException;
 import org.example.ilyaskalimullinn.notes.exception.NotFoundException;
 import org.example.ilyaskalimullinn.notes.exception.EntityPersistenceException;
 import org.example.ilyaskalimullinn.notes.util.converter.NoteConverter;
@@ -31,6 +31,9 @@ public class NoteService {
 
     @Autowired
     private NoteRepository noteRepository;
+
+    @Autowired
+    private NoteRepositoryJpa noteRepositoryJpa;
 
     public NoteEditResponse saveNote(NoteSerializer noteSerializer, User user) {
         try {
@@ -107,10 +110,9 @@ public class NoteService {
     }
 
     public NoteBriefResponse getNotesBrief(User user, Integer page, Integer size) {
-        // TODO !!!!! OPTIMIZE QUERIES!
         try {
 
-            List<NoteBriefSerializer> notes = noteRepository.findByAuthorOrderByUpdatedAtAsc(user, PageRequest.of(page, size))
+            List<NoteBriefSerializer> notes = noteRepositoryJpa.findByAuthorOrderByUpdatedAtDesc(user, PageRequest.of(page, size))
                     .stream()
                     .map(note -> NoteBriefSerializer.builder()
                             .title(note.getTitle())
