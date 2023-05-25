@@ -6,7 +6,7 @@
         <button class="btn btn-outline-secondary" type="submit">Search</button>
       </div>
     </div>
-    <CategoryList :active-category-id-list="searchFilters.categoryIdList" @update-active-id-list="updateSearchCategories"/>
+    <CategoryList class="mb-5 mt-5" :active-category-id-list="searchFilters.categoryIdList" @update-active-id-list="updateSearchCategories"/>
   </form>
 </template>
 

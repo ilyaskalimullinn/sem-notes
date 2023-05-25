@@ -2,8 +2,8 @@
   <Loader v-if="this.loading" />
   <MainLayout v-else>
     <h2 class="mb-5">My Notes</h2>
-    <SearchForm></SearchForm>
-    <NoteList></NoteList>
+    <SearchForm />
+    <NoteList class="col-6" />
     <div class="error" v-if="this.error">{{this.error}}</div>
   </MainLayout>
 </template>
@@ -15,10 +15,11 @@ import {useNoteStore} from "../stores/noteStore.js";
 import MainLayout from "../components/blocks/MainLayout.vue";
 import SearchForm from "../components/forms/SearchForm.vue";
 import Loader from "../components/Loader.vue";
+import CreateCategoryForm from "../components/forms/CreateCategoryForm.vue";
 
 export default {
   name: "NoteListView",
-  components: {Loader, SearchForm, MainLayout, NoteList},
+  components: {CreateCategoryForm, Loader, SearchForm, MainLayout, NoteList},
   data() {
     return {
       loading: true

@@ -13,9 +13,11 @@
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
             @click="selectedCategory = {...category}">
-      Options
+        Options
     </button>
   </div>
+
+  <CreateCategoryForm class="col-4" />
 
 
   <!-- Modal -->
@@ -55,10 +57,11 @@
 import {mapActions, mapState, mapWritableState} from "pinia";
 import {useNoteStore} from "../stores/noteStore.js";
 import Loader from "./Loader.vue";
+import CreateCategoryForm from "./forms/CreateCategoryForm.vue";
 
 export default {
   name: "CategoryList",
-  components: {Loader},
+  components: {CreateCategoryForm, Loader},
   props: {
     activeCategoryIdList: {
       type: Array,
