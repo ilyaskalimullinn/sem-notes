@@ -10,6 +10,9 @@ server.port=8080
 
 api.cors.allowed-origins=http://localhost:8080,http://localhost:5173
 api.uri=/api/v1
+springdoc.api-docs.path=/api-docs.yml
+springdoc.swagger-ui.path=/swagger-ui.html
+
 # generate 256-bit encryption key
 security.jwt.secret-key=
 security.jwt.expiration=3600000
