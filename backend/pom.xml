@@ -84,6 +84,14 @@
 			<version>4.11.0</version>
 		</dependency>
 
+		<!-- openapi, swagger -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

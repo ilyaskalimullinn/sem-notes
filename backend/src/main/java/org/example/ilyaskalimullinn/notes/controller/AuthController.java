@@ -1,5 +1,6 @@
 package org.example.ilyaskalimullinn.notes.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.ilyaskalimullinn.notes.data.request.LoginRequest;
 import org.example.ilyaskalimullinn.notes.data.request.RegistrationRequest;
 import org.example.ilyaskalimullinn.notes.data.response.AuthenticationResponse;
@@ -25,6 +26,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(description = "Registration")
     public AuthenticationResponse register(@RequestBody @Valid RegistrationRequest request,
                                            BindingResult result) {
         if (result.hasErrors()) {
@@ -34,6 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(description = "Authentication")
     @ResponseStatus(HttpStatus.OK)
     public AuthenticationResponse login(@RequestBody @Valid LoginRequest request,
                                         BindingResult result) {

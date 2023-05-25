@@ -1,5 +1,6 @@
 package org.example.ilyaskalimullinn.notes.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.request.CategoryEditRequest;
 import org.example.ilyaskalimullinn.notes.data.response.CategoryEditResponse;
@@ -25,12 +26,14 @@ public class CategoryController {
     private UserDetailsService userDetailsService;
 
     @GetMapping("")
+    @Operation(description = "Get a list of categories, briefly serialized, only id and name")
     public CategoryListResponse list(Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         return categoryService.getCategoryListResponseByAuthor(user);
     }
 
     @PostMapping("")
+    @Operation(description = "Create a category, accept category name")
     public CategoryEditResponse create(@RequestBody @Valid CategoryEditRequest categoryEditRequest,
                                        BindingResult result,
                                        Principal principal) {
@@ -45,6 +48,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{categoryId}")
+    @Operation(description = "Edit category, only name")
     public CategoryEditResponse edit(@RequestBody @Valid CategoryEditRequest categoryEditRequest,
                                        BindingResult result,
                                        @PathVariable("categoryId") Long categoryId,
@@ -60,6 +64,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
+    @Operation(description = "Delete category")
     public CategoryEditResponse delete(@PathVariable("categoryId") Long categoryId,
                                        Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());

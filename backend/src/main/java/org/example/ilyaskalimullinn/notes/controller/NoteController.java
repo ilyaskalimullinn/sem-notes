@@ -1,5 +1,6 @@
 package org.example.ilyaskalimullinn.notes.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.response.NoteDeleteResponse;
 import org.example.ilyaskalimullinn.notes.data.response.NoteEditResponse;
@@ -28,6 +29,7 @@ public class NoteController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(description = "Save a note")
     public NoteEditResponse save(@RequestBody @Valid NoteSerializer noteSerializer,
                                  BindingResult result,
                                  Principal principal) {
@@ -42,6 +44,7 @@ public class NoteController {
     }
 
     @GetMapping("/{noteId}")
+    @Operation(description = "Get detailed information about note including its content")
     public NoteSerializer get(@PathVariable("noteId") Long noteId,
                               Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
@@ -49,6 +52,7 @@ public class NoteController {
     }
 
     @GetMapping("")
+    @Operation(description = "Get brief information about notes with pagination")
     public NoteBriefResponse list(@RequestParam Integer page, @RequestParam Integer size,
                                   Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
@@ -56,6 +60,7 @@ public class NoteController {
     }
 
     @PutMapping("/{noteId}")
+    @Operation(description = "Update note: title, blocks, categories etc.")
     public NoteEditResponse update(@PathVariable("noteId") Long noteId,
             @RequestBody @Valid NoteSerializer noteSerializer,
                                  BindingResult result,
@@ -71,6 +76,7 @@ public class NoteController {
     }
 
     @DeleteMapping("/{noteId}")
+    @Operation(description = "Delete a note")
     public NoteDeleteResponse delete(@PathVariable("noteId") Long noteId,
                                      Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());

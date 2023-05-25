@@ -1,5 +1,6 @@
 package org.example.ilyaskalimullinn.notes.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.ilyaskalimullinn.notes.data.response.DictionaryDefinitionListResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.dictionary.Definition;
 import org.example.ilyaskalimullinn.notes.data.service.DictionaryApiService;
@@ -19,6 +20,7 @@ public class DictionaryController {
     private DictionaryApiService dictionaryApiService;
 
     @GetMapping("/{word}")
+    @Operation(description = "Get a list of definitions of the word in English")
     public DictionaryDefinitionListResponse getWordDefinitionList(@PathVariable String word) {
         List<Definition> definitions = dictionaryApiService.getDefinitionList(word);
 
