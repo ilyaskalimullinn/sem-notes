@@ -9,6 +9,7 @@ import NotFound404 from "../views/errors/NotFound404.vue";
 import NoteListView from "../views/NoteListView.vue";
 import {useNoteStore} from "../stores/noteStore.js";
 import NoteCreateView from "../views/NoteCreateView.vue";
+import DictionaryView from "../views/DictionaryView.vue";
 
 const routes = [
   {
@@ -36,6 +37,14 @@ const routes = [
     path: "/logout",
     name: "Logout",
     component: LogoutView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/dictionary",
+    name: "Dictionary",
+    component: DictionaryView,
     meta: {
       requiresAuth: true
     }

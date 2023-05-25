@@ -1,9 +1,12 @@
 <template>
   <input type="text" v-model="activeNote.title" placeholder="Title">
   <div id="editorjs"></div>
-  <button @click="submit">Save</button>
-  <button @click="this.delete">Delete</button>
-  <CategoryList :active-category-id-list="activeNote.categoryIds" @update-active-id-list="updateActiveNoteCategories" />
+  <div class="row w-75 mb-5 mt-5 d-flex">
+    <button @click="submit" class="btn btn-primary col-1">Save</button>
+    <div class="col-1"></div>
+    <button @click="this.delete" class="btn btn-primary col-1">Delete</button>
+  </div>
+  <CategoryList class="mb-5" :active-category-id-list="activeNote.categoryIds" @update-active-id-list="updateActiveNoteCategories" />
   <div class="error" v-if="this.error">{{error.message}}</div>
 </template>
 

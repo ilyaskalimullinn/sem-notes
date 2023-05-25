@@ -130,3 +130,10 @@ export async function apiDeleteCategoryById(id) {
   return response.data;
 }
 
+export async function apiDictionaryGetDefinitions(word) {
+  const response = await instance.get(`/dictionary/${word}`)
+    .catch(defaultApiExceptionHandler);
+
+  return response.data;
+}
+

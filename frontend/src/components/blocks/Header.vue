@@ -43,6 +43,11 @@ export default {
           authRequired: true
         },
         {
+          text: "Dictionary",
+          name: "Dictionary",
+          authRequired: true
+        },
+        {
           name: "Login",
           text: "Sign in",
           guestRequired: true,

@@ -28,7 +28,7 @@
 <script>
 import BaseContainer from "../containers/BaseContainer.vue";
 import {useUserStore} from "../stores/userStore.js";
-import {mapGetters, mapState} from "pinia";
+import {mapState} from "pinia";
 import MainLayout from "../components/blocks/MainLayout.vue";
 
 export default {
