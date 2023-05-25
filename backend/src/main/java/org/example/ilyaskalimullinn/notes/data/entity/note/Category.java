@@ -5,6 +5,8 @@ import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +30,14 @@ public class Category {
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name="parent_id", referencedColumnName="id")
     private Category parentCategory;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "note_category",
+            joinColumns = @JoinColumn(name = "category", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "note", referencedColumnName = "id")
+    )
+    @ToString.Exclude
+    private List<Note> notes = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

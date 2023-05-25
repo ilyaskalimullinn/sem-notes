@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {
-  apiDeleteCategory,
+  apiDeleteCategoryById,
   apiDeleteNoteById,
   apiGetCategories,
   apiGetNoteFull,
@@ -134,7 +134,7 @@ export const useNoteStore = defineStore({
     async deleteCategoryById(category) {
       this.loading = true;
       try {
-        const response = await apiDeleteCategory(category);
+        const response = await apiDeleteCategoryById(category.id);
         this.categoryList = this.categoryList.filter(c => c.id !== category.id);
         storeCategoriesInStorage(this.categoryList);
       } catch (error) {

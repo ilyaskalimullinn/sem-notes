@@ -3,6 +3,7 @@ package org.example.ilyaskalimullinn.notes.data.service;
 import org.example.ilyaskalimullinn.notes.data.entity.User;
 import org.example.ilyaskalimullinn.notes.data.entity.note.Category;
 import org.example.ilyaskalimullinn.notes.data.repository.CategoryRepository;
+import org.example.ilyaskalimullinn.notes.data.repository.NoteRepository;
 import org.example.ilyaskalimullinn.notes.data.response.CategoryEditResponse;
 import org.example.ilyaskalimullinn.notes.data.response.CategoryListResponse;
 import org.example.ilyaskalimullinn.notes.data.serializer.note.CategorySerializer;
@@ -18,6 +19,8 @@ public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private NoteRepository noteRepository;
 
     public CategoryListResponse getCategoryListResponseByAuthor(User user) {
         try {

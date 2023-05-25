@@ -115,7 +115,7 @@ export async function apiSaveCategory(category) {
 }
 
 export async function apiUpdateCategory(category) {
-  const response = await instance.post(`/category/${category.id}`, {
+  const response = await instance.put(`/category/${category.id}`, {
     category
   })
     .catch(defaultApiExceptionHandler);
@@ -123,7 +123,7 @@ export async function apiUpdateCategory(category) {
   return response.data;
 }
 
-export async function apiDeleteCategory(id) {
+export async function apiDeleteCategoryById(id) {
   const response = await instance.delete(`/category/${id}`)
     .catch(defaultApiExceptionHandler);
 
