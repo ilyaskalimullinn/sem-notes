@@ -1,0 +1,88 @@
+### Регистрация не успешна, ошибка валидации
+POST http://{{host}}:{{port}}/{{apiBasePath}}/auth/register
+Content-Type: application/json
+
+{
+ "username": "{{username}}",
+ "password": "{{password}}",
+ "passwordRepeat": "{{passwordRepeatWrong}}",
+ "fullName": "{{fullName}}"
+}
+
+
+### Регистрация успешна
+POST http://{{host}}:{{port}}/{{apiBasePath}}/auth/register
+Content-Type: application/json
+
+{
+ "username": "{{username}}",
+ "password": "{{password}}",
+ "passwordRepeat": "{{passwordRepeat}}",
+ "fullName": "{{fullName}}"
+}
+
+
+### Регистрация не успешна, такой пользователь уже есть
+POST http://{{host}}:{{port}}/{{apiBasePath}}/auth/register
+Content-Type: application/json
+
+{
+ "username": "{{username}}",
+ "password": "{{password}}",
+ "passwordRepeat": "{{passwordRepeat}}",
+ "fullName": "{{fullName}}"
+}
+
+### Аутентификация успешна
+POST http://{{host}}:{{port}}/{{apiBasePath}}/auth/login
+Content-Type: application/json
+
+{
+ "username": "{{username}}",
+ "password": "{{password}}"
+}
+
+
+### Успешное сохранение заметки (возьмите JWT из предыдущего запроса)
+POST http://{{host}}:{{port}}/{{apiBasePath}}/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQHlhbmRleC5ydSIsImlhdCI6MTY4NDk4MjI1NiwiZXhwIjoxNjg1MDE4MjU2fQ.l0iviKb-Wa-Q3OwOMMjMjyOK0SjwLxKIHpSgY-eFjcM
+
+{
+  "title": "Cool note",
+  "categoryIds": [],
+  "content": {
+    "version": "2.27.0",
+    "time": 1684606020837,
+    "blocks": [
+      {
+        "id": "mhTl6ghSkV",
+        "type": "paragraph",
+        "data": {
+          "text": "Hey. Meet the new Editor. On this picture you can see it in action. Then, try a demo 🤓"
+        }
+      },
+      {
+        "id": "gdf",
+        "type": "header",
+        "data": {
+          "text": "Header of level 1",
+          "level": 1
+        }
+      }
+    ]
+  }
+}
+
+
+### Получение заметок
+GET http://{{host}}:{{port}}/{{apiBasePath}}/notes?page=0&size=1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQHlhbmRleC5ydSIsImlhdCI6MTY4NDk4MjI1NiwiZXhwIjoxNjg1MDE4MjU2fQ.l0iviKb-Wa-Q3OwOMMjMjyOK0SjwLxKIHpSgY-eFjcM
+
+
+### Получение одной заметки (ID возьмите из предыдущего теста)
+GET http://{{host}}:{{port}}/{{apiBasePath}}/notes/8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQHlhbmRleC5ydSIsImlhdCI6MTY4NDk4MjI1NiwiZXhwIjoxNjg1MDE4MjU2fQ.l0iviKb-Wa-Q3OwOMMjMjyOK0SjwLxKIHpSgY-eFjcM
+
